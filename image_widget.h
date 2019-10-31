@@ -11,9 +11,9 @@ class Image_widget : public QWidget
     Q_OBJECT
 public:
     explicit Image_widget(QWidget *parent = nullptr);
-    void mouseMoveEvent(QMouseEvent *ev);
-    void leaveEvent(QEvent *ev);
-    void mousePressEvent(QMouseEvent *ev);
+//    void mouseMoveEvent(QMouseEvent *ev);
+//    void leaveEvent(QEvent *ev);
+//    void mousePressEvent(QMouseEvent *ev);
 
     int x, y;
 signals:

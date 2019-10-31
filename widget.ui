@@ -10,20 +10,23 @@
     <height>774</height>
    </rect>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
   <widget class="Image_widget" name="image" native="true">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>490</y>
-     <width>101</width>
-     <height>71</height>
+     <x>730</x>
+     <y>20</y>
+     <width>221</width>
+     <height>591</height>
     </rect>
    </property>
    <property name="mouseTracking">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
  </widget>

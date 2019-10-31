@@ -6,18 +6,12 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    connect(ui->image, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_current_pos()));
+//    connect(ui->image, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_current_pos()));
     originalPix.load("/home/liza/!QTProjects/technical_view/fox2.jpg");
     mPix = originalPix.copy();
-    //        mPix = QPixmap(400,400);
 
-    //        mPix.fill(Qt::white);
-
-
-    mousePressed = false;
+    mousePressed = true;
     drawStarted = false;
-
-
 }
 
 Widget::~Widget()
@@ -26,7 +20,7 @@ Widget::~Widget()
 }
 void Widget::Mouse_current_pos()
 {
-    qDebug("%d %d", ui->image->x, ui->image->y );
+//    qDebug("%d %d", ui->image->x, ui->image->y );
 }
 
 void Widget::mousePressEvent(QMouseEvent* event){
@@ -37,6 +31,7 @@ void Widget::mousePressEvent(QMouseEvent* event){
     mRect.setTopLeft(event->pos());
     mRect.setBottomRight(event->pos());
     qDebug("IOOO" );
+//    ui->image->
 
 }
 void Widget::mouseReleaseEvent(QMouseEvent *event){
@@ -57,16 +52,15 @@ void Widget::paintEvent(QPaintEvent *event){
 
     if(mousePressed){
         mPix = originalPix.copy();
-        painter.drawPixmap(0, 0, mPix);
+        painter.drawPixmap(10, 10, mPix);
         painter.drawRect(mRect);
         drawStarted = true;
     }
     else if (drawStarted){
         QPainter tempPainter(&mPix);
         tempPainter.drawRect(mRect);
-        painter.drawPixmap(0, 0, mPix);
+        painter.drawPixmap(10, 10, mPix);
     }
-
     painter.end();
 }
 void Widget::Mouse_Pressed()
