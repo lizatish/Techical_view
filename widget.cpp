@@ -6,12 +6,15 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-//    connect(ui->image, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_current_pos()));
+    //    connect(ui->image, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_current_pos()));
     originalPix.load("/home/liza/!QTProjects/technical_view/fox2.jpg");
     mPix = originalPix.copy();
 
     mousePressed = true;
     drawStarted = false;
+    saveEtalon = false;
+    changeEtalon = false;
+
 }
 
 Widget::~Widget()
@@ -20,28 +23,24 @@ Widget::~Widget()
 }
 void Widget::Mouse_current_pos()
 {
-//    qDebug("%d %d", ui->image->x, ui->image->y );
+    //    qDebug("%d %d", ui->image->x, ui->image->y );
 }
 
 void Widget::mousePressEvent(QMouseEvent* event){
-    //Mouse is pressed for the first time
+
     mousePressed = true;
 
-    //    //set the initial line points, both are same
     mRect.setTopLeft(event->pos());
     mRect.setBottomRight(event->pos());
     qDebug("IOOO" );
-//    ui->image->
 
 }
 void Widget::mouseReleaseEvent(QMouseEvent *event){
-
-    //When mouse is released update for the one last time
     mousePressed = false;
     update();
 }
 void Widget::mouseMoveEvent(QMouseEvent* event){
-    if(event->type() == QEvent::MouseMove){
+    if(event->type() == QEvent::MouseMove and changeEtalon){
         mRect.setBottomRight(event->pos());
     }
     update();
@@ -49,19 +48,19 @@ void Widget::mouseMoveEvent(QMouseEvent* event){
 void Widget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
-
     if(mousePressed){
         mPix = originalPix.copy();
-        painter.drawPixmap(10, 10, mPix);
+        painter.drawPixmap(0, 0, mPix);
         painter.drawRect(mRect);
         drawStarted = true;
     }
     else if (drawStarted){
         QPainter tempPainter(&mPix);
         tempPainter.drawRect(mRect);
-        painter.drawPixmap(10, 10, mPix);
+        painter.drawPixmap(0, 0, mPix);
     }
     painter.end();
+
 }
 void Widget::Mouse_Pressed()
 {
@@ -71,4 +70,10 @@ void Widget::Mouse_Pressed()
 void Widget::Mouse_Left()
 {
 
+}
+
+
+void Widget::on_changeEtalon_clicked()
+{
+    changeEtalon = true;
 }

@@ -22,12 +22,41 @@
      <x>10</x>
      <y>10</y>
      <width>500</width>
-     <height>591</height>
+     <height>500</height>
     </rect>
    </property>
    <property name="mouseTracking">
     <bool>false</bool>
    </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>550</y>
+     <width>241</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="changeEtalon">
+      <property name="text">
+       <string>Выбрать эталон</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="saveEtalon">
+      <property name="text">
+       <string>Сохранить эталон</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

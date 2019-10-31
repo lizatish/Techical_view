@@ -30,12 +30,18 @@ private slots:
     void Mouse_Pressed();
     void Mouse_Left();
 
+
+    void on_changeEtalon_clicked();
+
 private:
     Ui::Widget *ui;
     QPainter painter;
     QRect mRect;
     QPixmap mPix;
     QPixmap originalPix;
+
+    bool saveEtalon;
+    bool changeEtalon;
 
 
 };
