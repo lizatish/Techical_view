@@ -41,6 +41,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 }
 void Widget::mouseMoveEvent(QMouseEvent* event){
     if(event->type() == QEvent::MouseMove and changeEtalon){
+        mPix = originalPix.copy();
         mRect.setBottomRight(event->pos());
     }
     update();
@@ -49,7 +50,6 @@ void Widget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
     if(mousePressed){
-        mPix = originalPix.copy();
         painter.drawPixmap(0, 0, mPix);
         painter.drawRect(mRect);
         drawStarted = true;
@@ -76,4 +76,10 @@ void Widget::Mouse_Left()
 void Widget::on_changeEtalon_clicked()
 {
     changeEtalon = true;
+}
+
+void Widget::on_saveEtalon_clicked()
+{
+    saveEtalon = true;
+    changeEtalon = false;
 }

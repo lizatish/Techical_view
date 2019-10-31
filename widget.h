@@ -33,6 +33,8 @@ private slots:
 
     void on_changeEtalon_clicked();
 
+    void on_saveEtalon_clicked();
+
 private:
     Ui::Widget *ui;
     QPainter painter;
