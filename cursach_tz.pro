@@ -27,13 +27,11 @@ CONFIG += c++11
 SOURCES += \
         widget.cpp \
         main.cpp \
-        image_widget.cpp \
-    widgetdescription.cpp
+        image_widget.cpp
 
 HEADERS += \
     widget.h \
-    image_widget.h \
-    widgetdescription.h
+    image_widget.h
 
 FORMS += \
         widget.ui

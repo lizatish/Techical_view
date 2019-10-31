@@ -19,9 +19,9 @@
   <widget class="Image_widget" name="image" native="true">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>20</y>
-     <width>221</width>
+     <x>10</x>
+     <y>10</y>
+     <width>500</width>
      <height>591</height>
     </rect>
    </property>
