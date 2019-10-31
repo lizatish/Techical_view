@@ -26,13 +26,7 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private slots:
-    void Mouse_current_pos();
-    void Mouse_Pressed();
-    void Mouse_Left();
-
-
     void on_changeEtalon_clicked();
-
     void on_saveEtalon_clicked();
 
 private:
@@ -44,8 +38,6 @@ private:
 
     bool saveEtalon;
     bool changeEtalon;
-
-
 };
 
 #endif // WIDGET_H

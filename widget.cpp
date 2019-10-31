@@ -21,24 +21,18 @@ Widget::~Widget()
 {
     delete ui;
 }
-void Widget::Mouse_current_pos()
-{
-    //    qDebug("%d %d", ui->image->x, ui->image->y );
-}
 
 void Widget::mousePressEvent(QMouseEvent* event){
-
     mousePressed = true;
-
     mRect.setTopLeft(event->pos());
     mRect.setBottomRight(event->pos());
-    qDebug("IOOO" );
-
 }
+
 void Widget::mouseReleaseEvent(QMouseEvent *event){
     mousePressed = false;
     update();
 }
+
 void Widget::mouseMoveEvent(QMouseEvent* event){
     if(event->type() == QEvent::MouseMove and changeEtalon){
         mPix = originalPix.copy();
@@ -60,15 +54,6 @@ void Widget::paintEvent(QPaintEvent *event){
         painter.drawPixmap(0, 0, mPix);
     }
     painter.end();
-
-}
-void Widget::Mouse_Pressed()
-{
-
-}
-
-void Widget::Mouse_Left()
-{
 
 }
 
