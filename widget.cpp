@@ -31,19 +31,18 @@ QPixmap Widget::Mat2QPixmap(cv::Mat const& src)
                                      temp.rows, temp.step, QImage::Format_Grayscale8));
 }
 
-cv::Mat Widget::QPixmap2Mat(QImage const& src)
+void Widget::createNewMatEtalon()
 {
-
-
     originalMat(cv::Rect(currentRect.x(),currentRect.y(),
                          currentRect.width(),currentRect.height())).copyTo(etalonMat);
+}
 
-//    Mat cropedImage = croppedRef(originalMat, currentRect);
-//    QImage temp = src.copy();
-//    cv::Mat res(temp.height(),temp.width(),CV_8UC3,(uchar*)temp.bits(),temp.bytesPerLine());
-//    //    cvtColor(res, res,CV_BGR2RGB); // make convert colort to BGR !
-    imshow("124", etalonMat);
-    return etalonMat;
+void Widget::createNewQPixmapEtalon()
+{
+    etalonPix = originalPix.copy(currentRect);
+    ui->etalon->setScaledContents(true);
+    ui->etalon->setMaximumSize(QSize(ui->etalon->x(), ui->etalon->y()));
+    ui->etalon->setPixmap(etalonPix);
 }
 
 void Widget::mousePressEvent(QMouseEvent* event){
@@ -90,14 +89,8 @@ void Widget::on_saveEtalon_clicked()
 {
     saveEtalon = true;
     changeEtalon = false;
-    // вырезаем эталон
-    etalonPix = originalPix.copy(currentRect);
-    ui->etalon->setScaledContents(true);
-    ui->etalon->setMaximumSize(QSize(ui->etalon->x(), ui->etalon->y()));
-    ui->etalon->setPixmap(etalonPix);
 
-
-   QPixmap2Mat(etalonPix.toImage());
-
-
+    // Меняем эталоны
+    createNewQPixmapEtalon();
+    createNewMatEtalon();
 }

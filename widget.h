@@ -28,8 +28,8 @@ public:
 
 
     QPixmap Mat2QPixmap(Mat const& src);
-    Mat QPixmap2Mat(QImage const& src);
-
+    void createNewMatEtalon();
+    void createNewQPixmapEtalon();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
