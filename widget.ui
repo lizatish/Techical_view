@@ -13,6 +13,9 @@
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
@@ -21,12 +24,21 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>500</width>
-     <height>500</height>
+     <width>640</width>
+     <height>480</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="mouseTracking">
     <bool>false</bool>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
    </property>
    <property name="autoFillBackground">
     <bool>false</bool>
@@ -36,19 +48,12 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>550</y>
-     <width>241</width>
-     <height>101</height>
+     <y>500</y>
+     <width>542</width>
+     <height>145</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QPushButton" name="changeEtalon">
-      <property name="text">
-       <string>Выбрать эталон</string>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QPushButton" name="saveEtalon">
       <property name="text">
@@ -56,7 +61,101 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QComboBox" name="noiseType">
+        <item>
+         <property name="text">
+          <string>Гауссовский</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Импульсный</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Равномрный</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="noiseValue">
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Добавить шум</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="1">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="startTracking">
+        <property name="text">
+         <string>Начать слежение</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="stopTracking">
+        <property name="text">
+         <string>Прервать слежение</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="changeEtalon">
+      <property name="text">
+       <string>Выбрать эталон</string>
+      </property>
+     </widget>
+    </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="stopProcess">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>650</y>
+     <width>175</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Завершить работу</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="etalon">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>380</y>
+     <width>160</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

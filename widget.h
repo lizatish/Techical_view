@@ -3,6 +3,14 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QImage>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv/ml.h>
+using namespace cv;
 
 namespace Ui {
 class Widget;
@@ -19,6 +27,10 @@ public:
     bool drawStarted;
 
 
+    QImage Mat2QImage(Mat const& src);
+    Mat QImage2Mat(QImage const& src);
+
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -32,12 +44,15 @@ private slots:
 private:
     Ui::Widget *ui;
     QPainter painter;
-    QRect mRect;
-    QPixmap mPix;
+    QRect currentRect;
+    QPixmap currrentPix;
     QPixmap originalPix;
+    QPixmap etalonPix;
 
     bool saveEtalon;
     bool changeEtalon;
+
+
 };
 
 #endif // WIDGET_H

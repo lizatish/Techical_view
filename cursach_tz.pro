@@ -40,3 +40,19 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+TARGET = opencv
+CONFIG += console
+CONFIG -= app_bundle
+
+INCLUDEPATH += /usr/local/include/opencv
+LIBS += -L/usr/local/lib -lopencv_core \
+ -lopencv_videoio \
+ -lopencv_imgcodecs \
+ -lopencv_imgproc \
+ -lopencv_calib3d \
+ -lopencv_video \
+ -lopencv_features2d \
+ -lopencv_ml \
+ -lopencv_highgui \
+ -lopencv_objdetect \
