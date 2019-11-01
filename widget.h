@@ -45,7 +45,7 @@ private:
     Ui::Widget *ui;
     QPainter painter;
     QRect currentRect;
-    QPixmap currrentPix;
+    QPixmap currentPix;
     QPixmap originalPix;
     QPixmap etalonPix;
 

@@ -6,17 +6,13 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    //    connect(ui->image, SIGNAL(Mouse_Pos()), this, SLOT(Mouse_current_pos()));
 
-    originalPix.load("/home/liza/!QTProjects/technical_view/fox2.jpg");
-    currrentPix = originalPix.copy();
-
-    //    Mat img = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
-    ////    cv::resize(img, img, Size(480, 640));
-    //    QImage qim2 = Mat2QImage(img);
-
-    //    originalPix = QPixmap::fromImage(qim2);
-    //    mPix = originalPix.copy();
+    // запилить норм функцию
+    Mat img = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
+    cv::resize(img, img, Size(640, 480));
+    QImage qim2 = QImage((uchar*) img.data, img.cols, img.rows, img.step, QImage::Format_Grayscale8);
+    originalPix = QPixmap::fromImage(qim2);
+    currentPix = originalPix.copy();
 
     mousePressed = true;
     drawStarted = false;
@@ -42,7 +38,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 
 void Widget::mouseMoveEvent(QMouseEvent* event){
     if(event->type() == QEvent::MouseMove and changeEtalon){
-        currrentPix = originalPix.copy();
+        currentPix = originalPix.copy();
         currentRect.setBottomRight(event->pos());
     }
     update();
@@ -52,14 +48,14 @@ void Widget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
     if(mousePressed){
-        painter.drawPixmap(0, 0, currrentPix);
+        painter.drawPixmap(0, 0, currentPix);
         painter.drawRect(currentRect);
         drawStarted = true;
     }
     else if (drawStarted){
-        QPainter tempPainter(&currrentPix);
+        QPainter tempPainter(&currentPix);
         tempPainter.drawRect(currentRect);
-        painter.drawPixmap(0, 0, currrentPix);
+        painter.drawPixmap(0, 0, currentPix);
     }
     painter.end();
 }
@@ -74,7 +70,9 @@ void Widget::on_saveEtalon_clicked()
     saveEtalon = true;
     changeEtalon = false;
     // вырезаем эталон
-    etalonPix = currrentPix.copy(currentRect);
+    etalonPix = currentPix.copy(currentRect);
+    ui->etalon->setScaledContents(true);
+    ui->etalon->setMaximumSize(QSize(110,110));
     ui->etalon->setPixmap(etalonPix);
 
 }
