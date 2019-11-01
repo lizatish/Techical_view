@@ -8,10 +8,9 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     // запилить норм функцию
-    Mat img = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
-    cv::resize(img, img, Size(640, 480));
-    QImage qim2 = QImage((uchar*) img.data, img.cols, img.rows, img.step, QImage::Format_Grayscale8);
-    originalPix = QPixmap::fromImage(qim2);
+    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
+    cv::resize(originalMat, originalMat, Size(640, 480));
+    originalPix = Mat2QPixmap(originalMat) ;
     currentPix = originalPix.copy();
 
     mousePressed = true;
@@ -23,6 +22,28 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
+}
+
+QPixmap Widget::Mat2QPixmap(cv::Mat const& src)
+{
+    cv::Mat temp = src.clone();
+    return QPixmap::fromImage(QImage((uchar*) temp.data, temp.cols,
+                                     temp.rows, temp.step, QImage::Format_Grayscale8));
+}
+
+cv::Mat Widget::QPixmap2Mat(QImage const& src)
+{
+
+
+    originalMat(cv::Rect(currentRect.x(),currentRect.y(),
+                         currentRect.width(),currentRect.height())).copyTo(etalonMat);
+
+//    Mat cropedImage = croppedRef(originalMat, currentRect);
+//    QImage temp = src.copy();
+//    cv::Mat res(temp.height(),temp.width(),CV_8UC3,(uchar*)temp.bits(),temp.bytesPerLine());
+//    //    cvtColor(res, res,CV_BGR2RGB); // make convert colort to BGR !
+    imshow("124", etalonMat);
+    return etalonMat;
 }
 
 void Widget::mousePressEvent(QMouseEvent* event){
@@ -70,24 +91,13 @@ void Widget::on_saveEtalon_clicked()
     saveEtalon = true;
     changeEtalon = false;
     // вырезаем эталон
-    etalonPix = currentPix.copy(currentRect);
+    etalonPix = originalPix.copy(currentRect);
     ui->etalon->setScaledContents(true);
-    ui->etalon->setMaximumSize(QSize(110,110));
+    ui->etalon->setMaximumSize(QSize(ui->etalon->x(), ui->etalon->y()));
     ui->etalon->setPixmap(etalonPix);
 
-}
-QImage Widget::Mat2QImage(cv::Mat const& src)
-{
-    cv::Mat temp(src.cols, src.rows, src.type()); // make the same cv::Mat
-    //    cvtColor(src, temp,CV_BGR2RGB); // cvtColor Makes a copt, that what i need
-    QImage dest= QImage((uchar*) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_Grayscale8);
-    return dest;
-}
 
-cv::Mat Widget::QImage2Mat(QImage const& src)
-{
-    QImage temp = src.copy();
-    cv::Mat res(temp.height(),temp.width(),CV_8UC3,(uchar*)temp.bits(),temp.bytesPerLine());
-    //    cvtColor(res, res,CV_BGR2RGB); // make convert colort to BGR !
-    return res;
+   QPixmap2Mat(etalonPix.toImage());
+
+
 }

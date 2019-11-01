@@ -27,8 +27,8 @@ public:
     bool drawStarted;
 
 
-    QImage Mat2QImage(Mat const& src);
-    Mat QImage2Mat(QImage const& src);
+    QPixmap Mat2QPixmap(Mat const& src);
+    Mat QPixmap2Mat(QImage const& src);
 
 
 protected:
@@ -48,6 +48,9 @@ private:
     QPixmap currentPix;
     QPixmap originalPix;
     QPixmap etalonPix;
+
+    Mat etalonMat;
+    Mat originalMat;
 
     bool saveEtalon;
     bool changeEtalon;
