@@ -4,12 +4,20 @@
 #include <QWidget>
 #include <QPainter>
 #include <QImage>
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include <vector>
+#include <string.h>
+using namespace std;
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv/ml.h>
+#include <opencv2/core/utility.hpp>
+#include <glob.h>
 using namespace cv;
 
 namespace Ui {
@@ -40,6 +48,7 @@ protected:
 private slots:
     void on_changeEtalon_clicked();
     void on_saveEtalon_clicked();
+    void on_fileDialogButton_clicked();
 
 private:
     Ui::Widget *ui;

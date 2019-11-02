@@ -7,7 +7,7 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // запилить норм функцию
+    // запилить норм функцию и продумать над последовательностью
     originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
     cv::resize(originalMat, originalMat, Size(640, 480));
     originalPix = Mat2QPixmap(originalMat) ;
@@ -69,12 +69,21 @@ void Widget::paintEvent(QPaintEvent *event){
     painter.begin(this);
     if(mousePressed){
         painter.drawPixmap(0, 0, currentPix);
-        painter.drawRect(currentRect);
+        if(currentRect.width() > 3 and currentRect.height() > 3){
+            painter.drawRect(currentRect);
+            createNewQPixmapEtalon();
+            createNewMatEtalon();
+        }
         drawStarted = true;
     }
     else if (drawStarted){
         QPainter tempPainter(&currentPix);
-        tempPainter.drawRect(currentRect);
+        if(currentRect.width() > 3 and currentRect.height() > 3){
+            tempPainter.drawRect(currentRect);
+            // Меняем эталоны
+            createNewQPixmapEtalon();
+            createNewMatEtalon();
+        }
         painter.drawPixmap(0, 0, currentPix);
     }
     painter.end();
@@ -83,14 +92,52 @@ void Widget::paintEvent(QPaintEvent *event){
 void Widget::on_changeEtalon_clicked()
 {
     changeEtalon = true;
+    ui->changeEtalon->setDown(true);
 }
 
 void Widget::on_saveEtalon_clicked()
 {
     saveEtalon = true;
     changeEtalon = false;
+}
 
-    // Меняем эталоны
-    createNewQPixmapEtalon();
-    createNewMatEtalon();
+void Widget::on_fileDialogButton_clicked()
+{
+    ui->fileDialogButton->setToolTip(tr("Load contacts from a file"));
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Load picture"), "",
+                                                    tr("All Files (*)"));
+    qDebug(fileName.toLatin1());
+
+    QFileInfo fi(fileName);
+    QString folder_name = fi.baseName();
+    folder_name.append(".files");  // "jpg.files"
+
+    QDir tmp_dir(fi.dir());// "c:\\myFolder\\"
+    tmp_dir.mkdir(folder_name); // "c:\\myFolder\\jpg.files\\"
+
+    QStringList images = tmp_dir.entryList(QStringList() << "*.png" << "*.png",QDir::Files);
+
+    foreach(QString filename, images) {
+        vector<cv::String> fn;
+        QString s = tmp_dir.absolutePath() + "/*.png";
+        //        String s = tmp_dir. + "4";
+        //        QString absolute_file_path = tmp_dir.absoluteFilePath(relative_file_path);
+
+        //                glob("/home/images/*.png", fn, false);
+        //        s1 = s.toLatin1();
+        String s1 = s.toStdString();
+        glob(s1, fn, false);
+
+        vector<Mat> imags;
+        for (size_t i=0; i < fn.size(); i++){
+            cout << fn[i].c_str() << endl;
+            String fname = fn[i].c_str();
+            Mat imgg = imread(fname, IMREAD_GRAYSCALE);
+            imags.push_back(imgg);
+            imshow("12", imgg );
+
+            waitKey(100);
+        }
+    }
 }
