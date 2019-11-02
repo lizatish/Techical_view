@@ -38,6 +38,9 @@ public:
     QPixmap Mat2QPixmap(Mat const& src);
     void createNewMatEtalon();
     void createNewQPixmapEtalon();
+    vector<String> getImageFilenames();
+    void loadImagesFromPath(vector<String> imgFilenames);
+
 
 protected:
     void mousePressEvent(QMouseEvent *event);

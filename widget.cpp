@@ -103,26 +103,36 @@ void Widget::on_saveEtalon_clicked()
 
 void Widget::on_fileDialogButton_clicked()
 {
-    ui->fileDialogButton->setToolTip(tr("Load contacts from a file"));
+    vector<String> imageFilenames = getImageFilenames();
+    loadImagesFromPath(imageFilenames);
+
+}
+void Widget::loadImagesFromPath(vector<String> imgFilenames){
+    Mat image;
+    videoSequence.clear();
+    for (size_t i=0; i < imgFilenames.size(); i++){
+        image = imread(imgFilenames[i], IMREAD_GRAYSCALE);
+        cv::resize(image, image, Size(640, 480));
+        videoSequence.push_back(image);
+    }
+    cout << "Загружено изображений " << videoSequence.size() << endl;
+}
+
+// добавить считывание ток картинок с тока папки
+vector<String> Widget::getImageFilenames(){
+    // Открыть диалоговое окно
+    ui->fileDialogButton->setToolTip(tr("Open image for create video dequence"));
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Load picture"), "",
                                                     tr("All Files (*)"));
-
+    // Парсинг пути и вынимание папки
     QString folder_name = QFileInfo(fileName).baseName();
-    folder_name.append(".files");  // "jpg.files"
-    QDir tmp_dir(QFileInfo(fileName).dir());// "c:\\myFolder\\"
+    folder_name.append(".files");
+    QDir tmp_dir(QFileInfo(fileName).dir());
 
-    vector<cv::String> fn;
-    String s1 = (tmp_dir.absolutePath() + "/*.png").toStdString();
-    glob(s1, fn, false);
-
-    Mat image;
-    videoSequence.clear();
-    for (size_t i=0; i < fn.size(); i++){
-        image = imread(fn[i], IMREAD_GRAYSCALE);
-        videoSequence.push_back(image);
-    }
-}
-vector<String> getImageFilenames(QString folderFileName){
-
+    // Формирование последовательности картинок из пути папки
+    vector<cv::String> filenames;
+    String pngImagePath = (tmp_dir.absolutePath() + "/*.png").toStdString();
+    glob(pngImagePath, filenames, false);
+    return filenames;
 }
