@@ -60,11 +60,10 @@ private:
 
     Mat etalonMat;
     Mat originalMat;
+    vector<Mat> videoSequence;
 
     bool saveEtalon;
     bool changeEtalon;
-
-
 };
 
 #endif // WIDGET_H

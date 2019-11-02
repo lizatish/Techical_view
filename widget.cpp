@@ -107,37 +107,22 @@ void Widget::on_fileDialogButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Load picture"), "",
                                                     tr("All Files (*)"));
-    qDebug(fileName.toLatin1());
 
-    QFileInfo fi(fileName);
-    QString folder_name = fi.baseName();
+    QString folder_name = QFileInfo(fileName).baseName();
     folder_name.append(".files");  // "jpg.files"
+    QDir tmp_dir(QFileInfo(fileName).dir());// "c:\\myFolder\\"
 
-    QDir tmp_dir(fi.dir());// "c:\\myFolder\\"
-    tmp_dir.mkdir(folder_name); // "c:\\myFolder\\jpg.files\\"
+    vector<cv::String> fn;
+    String s1 = (tmp_dir.absolutePath() + "/*.png").toStdString();
+    glob(s1, fn, false);
 
-    QStringList images = tmp_dir.entryList(QStringList() << "*.png" << "*.png",QDir::Files);
-
-    foreach(QString filename, images) {
-        vector<cv::String> fn;
-        QString s = tmp_dir.absolutePath() + "/*.png";
-        //        String s = tmp_dir. + "4";
-        //        QString absolute_file_path = tmp_dir.absoluteFilePath(relative_file_path);
-
-        //                glob("/home/images/*.png", fn, false);
-        //        s1 = s.toLatin1();
-        String s1 = s.toStdString();
-        glob(s1, fn, false);
-
-        vector<Mat> imags;
-        for (size_t i=0; i < fn.size(); i++){
-            cout << fn[i].c_str() << endl;
-            String fname = fn[i].c_str();
-            Mat imgg = imread(fname, IMREAD_GRAYSCALE);
-            imags.push_back(imgg);
-            imshow("12", imgg );
-
-            waitKey(100);
-        }
+    Mat image;
+    videoSequence.clear();
+    for (size_t i=0; i < fn.size(); i++){
+        image = imread(fn[i], IMREAD_GRAYSCALE);
+        videoSequence.push_back(image);
     }
+}
+vector<String> getImageFilenames(QString folderFileName){
+
 }
