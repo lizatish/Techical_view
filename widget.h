@@ -17,7 +17,6 @@ using namespace std;
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv/ml.h>
 #include <opencv2/core/utility.hpp>
-#include <glob.h>
 using namespace cv;
 
 namespace Ui {
@@ -31,16 +30,11 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
-    bool mousePressed;
-    bool drawStarted;
-
-
     QPixmap Mat2QPixmap(Mat const& src);
     void createNewMatEtalon();
     void createNewQPixmapEtalon();
     vector<String> getImageFilenames();
     void loadImagesFromPath(vector<String> imgFilenames);
-
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -67,6 +61,8 @@ private:
 
     bool saveEtalon;
     bool changeEtalon;
+    bool mousePressed;
+    bool drawStarted;
 };
 
 #endif // WIDGET_H

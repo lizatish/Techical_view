@@ -8,10 +8,10 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
 
     // запилить норм функцию и продумать над последовательностью
-    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
-    cv::resize(originalMat, originalMat, Size(640, 480));
-    originalPix = Mat2QPixmap(originalMat) ;
-    currentPix = originalPix.copy();
+    //    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
+    //    cv::resize(originalMat, originalMat, Size(640, 480));
+    //    originalPix = Mat2QPixmap(originalMat) ;
+    //    currentPix = originalPix.copy();
 
     mousePressed = true;
     drawStarted = false;
@@ -103,9 +103,17 @@ void Widget::on_saveEtalon_clicked()
 
 void Widget::on_fileDialogButton_clicked()
 {
+    // Запрашиваем у пользователя видеопоследовательность
     vector<String> imageFilenames = getImageFilenames();
+    // Выгружаем в вектор для хранения картинок
     loadImagesFromPath(imageFilenames);
 
+    // доработать
+    //    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
+    originalMat = videoSequence[0];
+    originalPix = Mat2QPixmap(originalMat) ;
+    currentPix = originalPix.copy();
+    update();
 }
 void Widget::loadImagesFromPath(vector<String> imgFilenames){
     Mat image;
