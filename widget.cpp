@@ -61,17 +61,17 @@ void Widget::mouseMoveEvent(QMouseEvent* event){
         currentPix = originalPix.copy();
 
         QPoint rectCoorfinates;
-        if ((event->x() >= 640 - 2) and (event->y() >= 480 - 2)){
-            rectCoorfinates.setX(640 - 2);
-            rectCoorfinates.setY(480 - 2);
+        if ((event->x() >= imageHeight - 2) and (event->y() >= imageWidth - 2)){
+            rectCoorfinates.setX(imageHeight - 2);
+            rectCoorfinates.setY(imageWidth - 2);
         }
-        else if (event->x() >= 640 - 2){
-            rectCoorfinates.setX(640 - 2);
+        else if (event->x() >= imageHeight - 2){
+            rectCoorfinates.setX(imageHeight - 2);
             rectCoorfinates.setY(event->y());
         }
-        else if (event->y() >= 480 - 2){
+        else if (event->y() >= imageWidth - 2){
             rectCoorfinates.setX(event->x());
-            rectCoorfinates.setY(480 - 2);
+            rectCoorfinates.setY(imageWidth - 2);
         }
         else{
             rectCoorfinates.setX(event->x());
@@ -138,7 +138,7 @@ void Widget::loadImagesFromPath(vector<String> imgFilenames){
     videoSequence.clear();
     for (size_t i=0; i < imgFilenames.size(); i++){
         image = imread(imgFilenames[i], IMREAD_GRAYSCALE);
-        cv::resize(image, image, Size(640, 480));
+        cv::resize(image, image, Size(imageHeight, imageWidth));
         videoSequence.push_back(image);
     }
     cout << "Загружено изображений " << videoSequence.size() << endl;

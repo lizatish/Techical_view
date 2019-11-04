@@ -55,6 +55,9 @@ private:
     QPixmap originalPix;
     QPixmap etalonPix;
 
+    const int imageHeight = 640;
+    const int imageWidth = 480;
+
     Mat etalonMat;
     Mat originalMat;
     vector<Mat> videoSequence;
