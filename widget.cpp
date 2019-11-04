@@ -41,7 +41,7 @@ void Widget::createNewQPixmapEtalon()
 {
     etalonPix = originalPix.copy(currentRect);
     ui->etalon->setScaledContents(true);
-    ui->etalon->setMaximumSize(QSize(ui->etalon->x(), ui->etalon->y()));
+    ui->etalon->setMaximumSize(QSize(110, 110));
     ui->etalon->setPixmap(etalonPix);
 }
 
@@ -59,9 +59,28 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 void Widget::mouseMoveEvent(QMouseEvent* event){
     if(event->type() == QEvent::MouseMove and changeEtalon){
         currentPix = originalPix.copy();
-        currentRect.setBottomRight(event->pos());
+
+        QPoint rectCoorfinates;
+        if ((event->x() >= 640 - 2) and (event->y() >= 480 - 2)){
+            rectCoorfinates.setX(640 - 2);
+            rectCoorfinates.setY(480 - 2);
+        }
+        else if (event->x() >= 640 - 2){
+            rectCoorfinates.setX(640 - 2);
+            rectCoorfinates.setY(event->y());
+        }
+        else if (event->y() >= 480 - 2){
+            rectCoorfinates.setX(event->x());
+            rectCoorfinates.setY(480 - 2);
+        }
+        else{
+            rectCoorfinates.setX(event->x());
+            rectCoorfinates.setY(event->y());
+        }
+
+        currentRect.setBottomRight(rectCoorfinates);
+        update();
     }
-    update();
 }
 
 void Widget::paintEvent(QPaintEvent *event){
@@ -109,7 +128,6 @@ void Widget::on_fileDialogButton_clicked()
     loadImagesFromPath(imageFilenames);
 
     // доработать
-    //    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
     originalMat = videoSequence[0];
     originalPix = Mat2QPixmap(originalMat) ;
     currentPix = originalPix.copy();
