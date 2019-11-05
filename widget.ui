@@ -50,17 +50,10 @@
      <x>20</x>
      <y>500</y>
      <width>541</width>
-     <height>140</height>
+     <height>111</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QPushButton" name="fileDialogButton">
-      <property name="text">
-       <string>Загрузить видеопоследовательность...</string>
-      </property>
-     </widget>
-    </item>
+   <layout class="QGridLayout" name="mainLayout">
     <item row="1" column="1">
      <widget class="QPushButton" name="startTracking">
       <property name="text">
@@ -68,17 +61,17 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="fileDialogButton">
+      <property name="text">
+       <string>Загрузить видеопоследовательность...</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="1">
      <widget class="QPushButton" name="stopTracking">
       <property name="text">
        <string>Прервать слежение</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QPushButton" name="stopProcess">
-      <property name="text">
-       <string>Завершить работу</string>
       </property>
      </widget>
     </item>
@@ -106,7 +99,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="textEtalon">
    <property name="geometry">
     <rect>
      <x>660</x>
@@ -127,11 +120,11 @@
     <rect>
      <x>660</x>
      <y>170</y>
-     <width>181</width>
-     <height>81</height>
+     <width>201</width>
+     <height>71</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="etalonLayout">
     <item>
      <widget class="QPushButton" name="changeEtalon">
       <property name="text">
@@ -157,9 +150,9 @@
      <height>141</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_3">
+   <layout class="QGridLayout" name="parametersLayout">
     <item row="2" column="0">
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="noise_blurLayout">
       <item row="0" column="1">
        <widget class="QComboBox" name="noiseType">
         <item>
@@ -190,7 +183,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QDoubleSpinBox" name="gaussianBlurValue">
+       <widget class="QDoubleSpinBox" name="blurValue">
         <property name="maximum">
          <double>1.000000000000000</double>
         </property>
@@ -200,14 +193,14 @@
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="textNoise">
         <property name="text">
          <string>Шум</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="textBlur">
         <property name="text">
          <string>Размытие</string>
         </property>
@@ -216,14 +209,14 @@
      </layout>
     </item>
     <item row="3" column="0">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="saveButton">
       <property name="text">
        <string>Сохранить параметры</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="textParameters">
       <property name="text">
        <string>Добавить дополнительные параметры:</string>
       </property>

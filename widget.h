@@ -46,6 +46,11 @@ private slots:
     void on_changeEtalon_clicked();
     void on_saveEtalon_clicked();
     void on_fileDialogButton_clicked();
+    void on_saveButton_clicked();
+
+    void on_startTracking_clicked();
+
+    void on_stopTracking_clicked();
 
 private:
     Ui::Widget *ui;
@@ -54,6 +59,10 @@ private:
     QPixmap currentPix;
     QPixmap originalPix;
     QPixmap etalonPix;
+
+    double blurValue;
+    double noiseValue;
+    QString noiseType;
 
     const int imageHeight = 640;
     const int imageWidth = 480;
@@ -66,6 +75,7 @@ private:
     bool changeEtalon;
     bool mousePressed;
     bool drawStarted;
+    bool isStop;
 };
 
 #endif // WIDGET_H

@@ -7,16 +7,15 @@ Widget::Widget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // запилить норм функцию и продумать над последовательностью
-    //    originalMat = imread("/home/liza/!QTProjects/technical_view/fox2.jpg", IMREAD_GRAYSCALE);
-    //    cv::resize(originalMat, originalMat, Size(640, 480));
-    //    originalPix = Mat2QPixmap(originalMat) ;
-    //    currentPix = originalPix.copy();
+    blurValue = 0;
+    noiseValue = 0;
+    noiseType = "";
 
     mousePressed = true;
     drawStarted = false;
     saveEtalon = false;
     changeEtalon = false;
+    isStop = false;
 }
 
 Widget::~Widget()
@@ -133,6 +132,7 @@ void Widget::on_fileDialogButton_clicked()
     currentPix = originalPix.copy();
     update();
 }
+
 void Widget::loadImagesFromPath(vector<String> imgFilenames){
     Mat image;
     videoSequence.clear();
@@ -146,19 +146,49 @@ void Widget::loadImagesFromPath(vector<String> imgFilenames){
 
 // добавить считывание ток картинок с тока папки
 vector<String> Widget::getImageFilenames(){
-    // Открыть диалоговое окно
-    ui->fileDialogButton->setToolTip(tr("Open image for create video dequence"));
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Load picture"), "",
-                                                    tr("All Files (*)"));
-    // Парсинг пути и вынимание папки
-    QString folder_name = QFileInfo(fileName).baseName();
-    folder_name.append(".files");
-    QDir tmp_dir(QFileInfo(fileName).dir());
+
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Выберите папку"),
+                                                    "/home/liza/Pictures",
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
 
     // Формирование последовательности картинок из пути папки
     vector<cv::String> filenames;
-    String pngImagePath = (tmp_dir.absolutePath() + "/*.png").toStdString();
+    String pngImagePath = (dir + "/*.png").toStdString();
     glob(pngImagePath, filenames, false);
     return filenames;
+}
+
+void Widget::on_saveButton_clicked()
+{
+    blurValue = ui->blurValue->value();
+    noiseValue = ui->noiseValue->value();
+    noiseType = ui->noiseType->currentText();
+
+    // тут Настино размытие
+}
+
+void Widget::on_startTracking_clicked()
+{
+    // тут соединения всех кодов
+    for(Mat image: videoSequence){
+        currentPix = Mat2QPixmap(image);
+
+        // тут вставить код Ильи и Миши
+
+        // тут замена эталона и координат boundRect
+
+        update();
+        waitKey(100);
+
+        if(isStop){
+            isStop = false;
+            break;
+        }
+    }
+}
+
+void Widget::on_stopTracking_clicked()
+{
+    isStop = true;
 }
