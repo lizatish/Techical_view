@@ -91,6 +91,11 @@ void Widget::paintEvent(QPaintEvent *event){
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
+
+            ui->xEtalonValue->setValue(currentRect.x());
+            ui->yEtalonValue->setValue(currentRect.y());
+            ui->widthEtalonValue->setValue(currentRect.width());
+            ui->heightEtalonValue->setValue(currentRect.height());
         }
         drawStarted = true;
     }
@@ -101,6 +106,11 @@ void Widget::paintEvent(QPaintEvent *event){
             // Меняем эталоны
             createNewQPixmapEtalon();
             createNewMatEtalon();
+
+            ui->xEtalonValue->setValue(currentRect.x());
+            ui->yEtalonValue->setValue(currentRect.y());
+            ui->widthEtalonValue->setValue(currentRect.width());
+            ui->heightEtalonValue->setValue(currentRect.height());
         }
         painter.drawPixmap(0, 0, currentPix);
     }
@@ -144,7 +154,6 @@ void Widget::loadImagesFromPath(vector<String> imgFilenames){
     cout << "Загружено изображений " << videoSequence.size() << endl;
 }
 
-// добавить считывание ток картинок с тока папки
 vector<String> Widget::getImageFilenames(){
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Выберите папку"),
@@ -159,14 +168,7 @@ vector<String> Widget::getImageFilenames(){
     return filenames;
 }
 
-void Widget::on_saveButton_clicked()
-{
-    blurValue = ui->blurValue->value();
-    noiseValue = ui->noiseValue->value();
-    noiseType = ui->noiseType->currentText();
 
-    // тут Настино размытие
-}
 
 void Widget::on_startTracking_clicked()
 {
@@ -191,4 +193,19 @@ void Widget::on_startTracking_clicked()
 void Widget::on_stopTracking_clicked()
 {
     isStop = true;
+}
+
+void Widget::on_saveNoiseSettingsButton_clicked()
+{
+    blurValue = ui->blurValue->value();
+    noiseValue = ui->noiseValue->value();
+    noiseType = ui->noiseType->currentText();
+
+    // тут Настино размытие
+}
+
+void Widget::on_saveCryterySettingsButton_clicked()
+{
+    cryteryFunctionType = ui->crytheryType->currentText();
+    cout << cryteryFunctionType.toStdString() << endl;
 }

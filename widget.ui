@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1069</width>
-    <height>774</height>
+    <width>1062</width>
+    <height>645</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -115,38 +115,12 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>170</y>
-     <width>201</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="etalonLayout">
-    <item>
-     <widget class="QPushButton" name="changeEtalon">
-      <property name="text">
-       <string>Выбрать эталон</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="saveEtalon">
-      <property name="text">
-       <string>Сохранить эталон</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QWidget" name="gridLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>617</x>
-     <y>500</y>
-     <width>361</width>
+     <x>660</x>
+     <y>470</y>
+     <width>371</width>
      <height>141</height>
     </rect>
    </property>
@@ -224,6 +198,163 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>160</y>
+     <width>311</width>
+     <height>139</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="etalon2Layout">
+    <item>
+     <layout class="QVBoxLayout" name="etalonLayout">
+      <item>
+       <widget class="QPushButton" name="changeEtalon">
+        <property name="text">
+         <string>Выбрать эталон</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveEtalon">
+        <property name="text">
+         <string>Сохранить эталон</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="yEtalonValue">
+          <property name="maximum">
+           <number>480</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="widthEtalonText">
+          <property name="text">
+           <string>Width</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="yEtalonText">
+          <property name="text">
+           <string>Y</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="xEtalonText">
+          <property name="text">
+           <string>X</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <layout class="QGridLayout" name="coordinatesEtalonLayout">
+          <item row="1" column="0">
+           <widget class="QSpinBox" name="xEtalonValue">
+            <property name="maximum">
+             <number>640</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="heightEtalonText">
+          <property name="text">
+           <string>Height</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QSpinBox" name="widthEtalonValue">
+          <property name="maximum">
+           <number>640</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QSpinBox" name="heightEtalonValue">
+          <property name="maximum">
+           <number>480</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>340</y>
+     <width>371</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="cryteryFunctionLayout">
+    <item row="4" column="0">
+     <widget class="QPushButton" name="saveCryterySettings">
+      <property name="text">
+       <string>Сохранить </string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <layout class="QGridLayout" name="ctytheryMethodsLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="textCriteryFunction">
+        <property name="text">
+         <string>Выбрать критериальную функцию:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
+     <layout class="QHBoxLayout" name="cryteryMethodLayout">
+      <item>
+       <widget class="QLabel" name="textCrytheryMethod">
+        <property name="text">
+         <string>Название метода</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="crytheryType">
+        <item>
+         <property name="text">
+          <string>Разностная</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Квадрат разности</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Корреляция</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

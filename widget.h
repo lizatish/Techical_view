@@ -46,11 +46,11 @@ private slots:
     void on_changeEtalon_clicked();
     void on_saveEtalon_clicked();
     void on_fileDialogButton_clicked();
-    void on_saveButton_clicked();
-
     void on_startTracking_clicked();
-
     void on_stopTracking_clicked();
+    void on_saveNoiseSettingsButton_clicked();
+
+    void on_saveCryterySettingsButton_clicked();
 
 private:
     Ui::Widget *ui;
@@ -63,6 +63,8 @@ private:
     double blurValue;
     double noiseValue;
     QString noiseType;
+
+    QString cryteryFunctionType;
 
     const int imageHeight = 640;
     const int imageWidth = 480;
