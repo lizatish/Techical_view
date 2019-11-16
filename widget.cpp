@@ -16,6 +16,7 @@ Widget::Widget(QWidget *parent) :
     saveEtalon = false;
     changeEtalon = false;
     isStop = false;
+    isSetEtalonFromCoordinates = false;
 }
 
 Widget::~Widget()
@@ -91,11 +92,12 @@ void Widget::paintEvent(QPaintEvent *event){
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
-
-            ui->xEtalonValue->setValue(currentRect.x());
-            ui->yEtalonValue->setValue(currentRect.y());
-            ui->widthEtalonValue->setValue(currentRect.width());
-            ui->heightEtalonValue->setValue(currentRect.height());
+            if (not isSetEtalonFromCoordinates){
+                ui->xEtalonValue->setValue(currentRect.x());
+                ui->yEtalonValue->setValue(currentRect.y());
+                ui->widthEtalonValue->setValue(currentRect.width());
+                ui->heightEtalonValue->setValue(currentRect.height());
+            }
         }
         drawStarted = true;
     }
@@ -106,11 +108,12 @@ void Widget::paintEvent(QPaintEvent *event){
             // Меняем эталоны
             createNewQPixmapEtalon();
             createNewMatEtalon();
-
-            ui->xEtalonValue->setValue(currentRect.x());
-            ui->yEtalonValue->setValue(currentRect.y());
-            ui->widthEtalonValue->setValue(currentRect.width());
-            ui->heightEtalonValue->setValue(currentRect.height());
+            if (not isSetEtalonFromCoordinates){
+                ui->xEtalonValue->setValue(currentRect.x());
+                ui->yEtalonValue->setValue(currentRect.y());
+                ui->widthEtalonValue->setValue(currentRect.width());
+                ui->heightEtalonValue->setValue(currentRect.height());
+            }
         }
         painter.drawPixmap(0, 0, currentPix);
     }
@@ -127,6 +130,22 @@ void Widget::on_saveEtalon_clicked()
 {
     saveEtalon = true;
     changeEtalon = false;
+    isSetEtalonFromCoordinates = false;
+
+    currentRect.setX(ui->xEtalonValue->value());
+    currentRect.setY(ui->yEtalonValue->value());
+    currentRect.setWidth(ui->widthEtalonValue->value());
+    currentRect.setHeight(ui->heightEtalonValue->value());
+    createNewQPixmapEtalon();
+    createNewMatEtalon();
+
+    painter.begin(this);
+    painter.drawPixmap(0, 0, originalPix);
+    painter.drawRect(currentRect);
+    painter.end();
+    update();
+
+
 }
 
 void Widget::on_fileDialogButton_clicked()
@@ -168,8 +187,6 @@ vector<String> Widget::getImageFilenames(){
     return filenames;
 }
 
-
-
 void Widget::on_startTracking_clicked()
 {
     // тут соединения всех кодов
@@ -208,4 +225,9 @@ void Widget::on_saveCryterySettingsButton_clicked()
 {
     cryteryFunctionType = ui->crytheryType->currentText();
     cout << cryteryFunctionType.toStdString() << endl;
+}
+
+void Widget::on_saveEtalon_2_clicked()
+{
+    isSetEtalonFromCoordinates = true;
 }

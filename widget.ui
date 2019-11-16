@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
-    <height>645</height>
+    <width>1064</width>
+    <height>657</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -205,9 +205,9 @@
    <property name="geometry">
     <rect>
      <x>660</x>
-     <y>160</y>
-     <width>311</width>
-     <height>139</height>
+     <y>170</y>
+     <width>361</width>
+     <height>141</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="etalon2Layout">
@@ -229,35 +229,45 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="yEtalonValue">
+        <item row="2" column="3">
+         <widget class="QSpinBox" name="heightEtalonValue">
+          <property name="minimum">
+           <number>1</number>
+          </property>
           <property name="maximum">
            <number>480</number>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
+        <item row="1" column="2">
          <widget class="QLabel" name="widthEtalonText">
           <property name="text">
            <string>Width</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="1" column="1">
          <widget class="QLabel" name="yEtalonText">
           <property name="text">
            <string>Y</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="xEtalonText">
-          <property name="text">
-           <string>X</string>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="yEtalonValue">
+          <property name="maximum">
+           <number>480</number>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="1" column="3">
+         <widget class="QLabel" name="heightEtalonText">
+          <property name="text">
+           <string>Height</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
          <layout class="QGridLayout" name="coordinatesEtalonLayout">
           <item row="1" column="0">
            <widget class="QSpinBox" name="xEtalonValue">
@@ -268,24 +278,20 @@
           </item>
          </layout>
         </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="heightEtalonText">
-          <property name="text">
-           <string>Height</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
+        <item row="2" column="2">
          <widget class="QSpinBox" name="widthEtalonValue">
+          <property name="minimum">
+           <number>1</number>
+          </property>
           <property name="maximum">
            <number>640</number>
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
-         <widget class="QSpinBox" name="heightEtalonValue">
-          <property name="maximum">
-           <number>480</number>
+        <item row="1" column="0">
+         <widget class="QLabel" name="xEtalonText">
+          <property name="text">
+           <string>X</string>
           </property>
          </widget>
         </item>
@@ -299,9 +305,9 @@
    <property name="geometry">
     <rect>
      <x>660</x>
-     <y>340</y>
+     <y>360</y>
      <width>371</width>
-     <height>111</height>
+     <height>101</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="cryteryFunctionLayout">
@@ -357,6 +363,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="saveEtalon_2">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>310</y>
+     <width>357</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Задать эталон по координатам</string>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

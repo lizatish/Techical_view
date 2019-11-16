@@ -49,8 +49,8 @@ private slots:
     void on_startTracking_clicked();
     void on_stopTracking_clicked();
     void on_saveNoiseSettingsButton_clicked();
-
     void on_saveCryterySettingsButton_clicked();
+    void on_saveEtalon_2_clicked();
 
 private:
     Ui::Widget *ui;
@@ -78,6 +78,7 @@ private:
     bool mousePressed;
     bool drawStarted;
     bool isStop;
+    bool isSetEtalonFromCoordinates = false;
 };
 
 #endif // WIDGET_H
