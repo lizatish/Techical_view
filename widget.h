@@ -43,14 +43,14 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private slots:
-    void on_changeEtalon_clicked();
+    void on_setEtalonHandle_clicked();
     void on_saveEtalon_clicked();
     void on_fileDialogButton_clicked();
     void on_startTracking_clicked();
     void on_stopTracking_clicked();
     void on_saveNoiseSettingsButton_clicked();
     void on_saveCryterySettingsButton_clicked();
-    void on_saveEtalon_2_clicked();
+    void on_setEtalonFromCoordinates_clicked();
 
 private:
     Ui::Widget *ui;
@@ -74,7 +74,7 @@ private:
     vector<Mat> videoSequence;
 
     bool saveEtalon;
-    bool changeEtalon;
+    bool isSetEtalonHandle;
     bool mousePressed;
     bool drawStarted;
     bool isStop;

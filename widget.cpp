@@ -14,7 +14,7 @@ Widget::Widget(QWidget *parent) :
     mousePressed = true;
     drawStarted = false;
     saveEtalon = false;
-    changeEtalon = false;
+    isSetEtalonHandle = false;
     isStop = false;
     isSetEtalonFromCoordinates = false;
 }
@@ -57,7 +57,8 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 }
 
 void Widget::mouseMoveEvent(QMouseEvent* event){
-    if(event->type() == QEvent::MouseMove and changeEtalon){
+    if(event->type() == QEvent::MouseMove and isSetEtalonHandle
+            and not isSetEtalonFromCoordinates){
         currentPix = originalPix.copy();
 
         QPoint rectCoorfinates;
@@ -120,16 +121,21 @@ void Widget::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-void Widget::on_changeEtalon_clicked()
+void Widget::on_setEtalonHandle_clicked()
 {
-    changeEtalon = true;
-    ui->changeEtalon->setDown(true);
+    isSetEtalonHandle = true;
+    ui->setEtalonHandle->setDown(true);
+}
+void Widget::on_setEtalonFromCoordinates_clicked()
+{
+    isSetEtalonFromCoordinates = true;
+    ui->setEtalonFromCoordinates->setDown(true);
 }
 
 void Widget::on_saveEtalon_clicked()
 {
     saveEtalon = true;
-    changeEtalon = false;
+    isSetEtalonHandle = false;
     isSetEtalonFromCoordinates = false;
 
     currentRect.setX(ui->xEtalonValue->value());
@@ -139,13 +145,10 @@ void Widget::on_saveEtalon_clicked()
     createNewQPixmapEtalon();
     createNewMatEtalon();
 
-    painter.begin(this);
-    painter.drawPixmap(0, 0, originalPix);
-    painter.drawRect(currentRect);
-    painter.end();
+    currentPix = originalPix.copy();
+    QPainter tempPainter(&currentPix);
+    tempPainter.drawRect(currentRect);
     update();
-
-
 }
 
 void Widget::on_fileDialogButton_clicked()
@@ -227,7 +230,3 @@ void Widget::on_saveCryterySettingsButton_clicked()
     cout << cryteryFunctionType.toStdString() << endl;
 }
 
-void Widget::on_saveEtalon_2_clicked()
-{
-    isSetEtalonFromCoordinates = true;
-}
