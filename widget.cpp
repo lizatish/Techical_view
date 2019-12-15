@@ -90,6 +90,7 @@ void Widget::paintEvent(QPaintEvent *event){
     if(mousePressed){
         painter.drawPixmap(0, 0, currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
+            painter.setPen(QColor(255, 247, 28, 255));
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
@@ -105,6 +106,8 @@ void Widget::paintEvent(QPaintEvent *event){
     else if (drawStarted){
         QPainter tempPainter(&currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
+//            tempPainter.setBrush(QColor(244,1,1, 127));
+            tempPainter.setPen(QColor(255, 247, 28, 255));
             tempPainter.drawRect(currentRect);
             // Меняем эталоны
             createNewQPixmapEtalon();
@@ -147,6 +150,7 @@ void Widget::on_saveEtalon_clicked()
 
     currentPix = originalPix.copy();
     QPainter tempPainter(&currentPix);
+    tempPainter.setPen(QColor(255, 247, 28, 255));
     tempPainter.drawRect(currentRect);
     update();
 }
@@ -200,12 +204,6 @@ void Widget::on_startTracking_clicked()
 
         // тут вставить код Ильи и Миши
         debugMat = C.calculation_criterion(originalMat, etalonMat);
-        Mat r;
-        debugMat.copyTo(r);
-        imshow("123", r);
-        waitKey(10000000);
-
-        // тут замена эталона и координат boundRect
 
         update();
         waitKey(100);

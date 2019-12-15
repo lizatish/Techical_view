@@ -28,12 +28,14 @@ SOURCES += \
         widget.cpp \
         main.cpp \
         image_widget.cpp \
-    criterion_function_evaluator.cpp
+    criterion_function_evaluator.cpp \
+    etalon_updater.cpp
 
 HEADERS += \
     widget.h \
     image_widget.h \
-    criterion_function_evaluator.h
+    criterion_function_evaluator.h \
+    etalon_updater.h
 
 FORMS += \
         widget.ui

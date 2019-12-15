@@ -101,7 +101,6 @@ Mat Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
 
                     // Выбираем критериальную функцию
                     switch_f(I,Ic);
-
                 }
             }
 
@@ -128,5 +127,6 @@ Mat Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
             errorI = 0;
         }
     }
+    return debug;
 
 }

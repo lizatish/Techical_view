@@ -4,8 +4,10 @@
 #include <QWidget>
 #include <QPainter>
 #include <QImage>
+#include <QColor>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <Qt>
 
 #include "criterion_function_evaluator.h"
 
@@ -68,8 +70,8 @@ private:
 
     QString cryteryFunctionType;
 
-    const int imageHeight = 320;
-    const int imageWidth = 240;
+    const int imageHeight = 640;
+    const int imageWidth = 480;
 
     Mat etalonMat;
     Mat originalMat;
