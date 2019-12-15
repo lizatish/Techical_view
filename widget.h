@@ -10,6 +10,7 @@
 #include <Qt>
 
 #include "criterion_function_evaluator.h"
+#include "etalon_updater.h"
 
 #include <vector>
 #include <string.h>
@@ -70,8 +71,8 @@ private:
 
     QString cryteryFunctionType;
 
-    const int imageHeight = 640;
-    const int imageWidth = 480;
+    const int imageHeight = 320;
+    const int imageWidth = 240;
 
     Mat etalonMat;
     Mat originalMat;

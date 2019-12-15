@@ -196,14 +196,16 @@ vector<String> Widget::getImageFilenames(){
 
 void Widget::on_startTracking_clicked()
 {
-    Criterion_function_evaluator C;
-
+    Criterion_function_evaluator cryteryFunction;
+    Etalon_updater etalonUpdayer;
     // тут соединения всех кодов
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
 
         // тут вставить код Ильи и Миши
-        debugMat = C.calculation_criterion(originalMat, etalonMat);
+        debugMat = cryteryFunction.calculation_criterion(originalMat, etalonMat);
+
+        vector<int> coordinates = etalonUpdayer.search(image, debugMat);
 
         update();
         waitKey(100);
