@@ -13,7 +13,6 @@ public:
     Criterion_function_evaluator();
     int** MatrixI;
     Mat calculation_criterion(Mat src, Mat srccrop);
-    Mat debug;
     int num;
 
 private:
@@ -28,7 +27,7 @@ private:
     // Выбор критериальной функции
     void switch_f(int I, int Ic);
     // Функция вычисления значений пикселей
-    void src_error(Mat src, Mat srccrop);
+    Mat src_error(Mat src, Mat srccrop);
     int errorI = 0;
     uint64_t errorSum = 0;
     int coeff,coeff2;

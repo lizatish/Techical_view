@@ -68,11 +68,12 @@ private:
 
     QString cryteryFunctionType;
 
-    const int imageHeight = 640;
-    const int imageWidth = 480;
+    const int imageHeight = 320;
+    const int imageWidth = 240;
 
     Mat etalonMat;
     Mat originalMat;
+    Mat debugMat;
     vector<Mat> videoSequence;
 
     bool saveEtalon;

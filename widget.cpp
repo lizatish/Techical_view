@@ -193,12 +193,17 @@ vector<String> Widget::getImageFilenames(){
 void Widget::on_startTracking_clicked()
 {
     Criterion_function_evaluator C;
+
     // тут соединения всех кодов
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
 
-        C.calculation_criterion(originalMat, etalonMat);
         // тут вставить код Ильи и Миши
+        debugMat = C.calculation_criterion(originalMat, etalonMat);
+        Mat r;
+        debugMat.copyTo(r);
+        imshow("123", r);
+        waitKey(10000000);
 
         // тут замена эталона и координат boundRect
 

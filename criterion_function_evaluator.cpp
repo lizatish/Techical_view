@@ -17,9 +17,7 @@ Mat Criterion_function_evaluator::calculation_criterion(Mat src, Mat srccrop){
     cout << "srccrop: " << srccrop.rows << " " << srccrop.cols << endl;
 
     // Входим в функцию расчета значений пикселей
-    src_error(src, srccrop);
-
-    return debug;
+    return src_error(src, srccrop);
 }
 
 
@@ -50,11 +48,8 @@ void Criterion_function_evaluator::func4(int I, int Ic){
 
 // Выбор критериальной функции
 void Criterion_function_evaluator::switch_f(int I, int Ic){
-
-    cout << "Введите num ";
-    cin >> num ;
-    cout << endl;
-
+    //////////////// num = 1; ЭТО НУЖНО ПОТОМ ИЗМЕНИТЬ
+    num = 1;
     switch(num)
     {
     case 1:
@@ -84,9 +79,9 @@ void Criterion_function_evaluator::switch_f(int I, int Ic){
 }
 
 // Функция вычисления значений пикселей
-void Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
+Mat Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
 {
-
+    Mat debug = src.clone();
     float I, Ic;
     // Проходим по всем строкам, эталон сдвигается на deltax после каждого попиксельного прохода по эталону.
     for (int deltax = 0; deltax < src.rows; deltax++)
@@ -101,8 +96,8 @@ void Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
                 for( int j = 0; j < srccrop.cols; j++)
                 {
                     // Вычисление значений пикселей эталона и исходного одноканального изображения
-                    Ic = (int)srccrop.at<uchar>(j,i);
-                    I = (int)src.at<uchar>(j+deltay,i+deltax);
+                    Ic = (int)srccrop.at<uchar>(i,j);
+                    I = (int)src.at<uchar>(i+deltax, j+deltay);
 
                     // Выбираем критериальную функцию
                     switch_f(I,Ic);
@@ -111,14 +106,14 @@ void Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
             }
 
             // Записываем значения в матрицу размерностью такой же, как исходное изображение
-//            MatrixI[deltax][deltay] = errorSum;
+            //            MatrixI[deltax][deltay] = errorSum;
 
             // Вычисляем значения пикселей путем нормализации
             d = errorSum * coeff2 /(srccrop.rows*srccrop.cols*coeff);
             cout << deltax << " " << deltay << " | " << errorSum << " " << d << endl;
 
             // Записываем значения пикселей в матрицу изображения
-            debug.at<uchar>(Point(deltax, deltay)) = d;
+            debug.at<uchar>(Point(deltay, deltax)) = d;
 
             // Для нормированной корреляции используются переменные sumI, sumIc
             // Служат для накопления ошибки
@@ -133,4 +128,5 @@ void Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
             errorI = 0;
         }
     }
+
 }
