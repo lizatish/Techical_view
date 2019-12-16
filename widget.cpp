@@ -106,7 +106,7 @@ void Widget::paintEvent(QPaintEvent *event){
     else if (drawStarted){
         QPainter tempPainter(&currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
-//            tempPainter.setBrush(QColor(244,1,1, 127));
+            //            tempPainter.setBrush(QColor(244,1,1, 127));
             tempPainter.setPen(QColor(255, 247, 28, 255));
             tempPainter.drawRect(currentRect);
             // Меняем эталоны
@@ -149,10 +149,10 @@ void Widget::on_saveEtalon_clicked()
     createNewMatEtalon();
 
     currentPix = originalPix.copy();
-    QPainter tempPainter(&currentPix);
-    tempPainter.setPen(QColor(255, 247, 28, 255));
-    tempPainter.drawRect(currentRect);
+    painter.setPen(QColor(255, 247, 28, 255));
+    painter.drawRect(currentRect);
     update();
+    updateRoi();
 }
 
 void Widget::on_fileDialogButton_clicked()
@@ -203,15 +203,16 @@ void Widget::on_startTracking_clicked()
         currentPix = Mat2QPixmap(image);
 
         // тут вставить код Ильи и Миши
-        debugMat = cryteryFunction.calculation_criterion(image, etalonMat);
-//        imwrite("/home/liza/Desktop/1.png", debugMat);
-        QRect etalon_coordinates = etalonUpdayer.search(etalonMat, debugMat);
-        currentRect = etalon_coordinates;
+        Mat debugMat = cryteryFunction.calculation_criterion(image, etalonMat);
+        vector<QRect> outputData = etalonUpdayer.search(etalonMat, debugMat);
+        currentRect = outputData[0];
+        roiRect = outputData[1];
+
         // Обновление эталона
         createNewMatEtalon();
         createNewQPixmapEtalon();
 
-//        currentPix = originalPix.copy();
+        //        currentPix = originalPix.copy();
         QPainter tempPainter(&currentPix);
         tempPainter.setPen(QColor(0, 247, 28, 255));
         tempPainter.drawRect(currentRect);
@@ -224,6 +225,44 @@ void Widget::on_startTracking_clicked()
             break;
         }
     }
+}
+void Widget::updateRoi(){
+
+    int width = currentRect.width();
+    int height = currentRect.height();
+    int xCoor =currentRect.x();
+    int yCoor =currentRect.y();
+
+
+    int nx = width/4; //число на которое увеличиваем ROI относительно эталона
+    int ny = height/4;
+
+    int width_roi = width+2*nx;
+    int height_roi = height+2*ny;
+
+    int nx_down = xCoor-nx + width_roi;
+    int ny_down = yCoor-ny + height_roi; //координаты нижнего угла
+
+    cout <<"Ширина рои " <<width_roi <<" Длина рои " << height_roi<<endl;
+    cout <<"Координаты нижнего угла Х " <<nx_down <<" У " << ny_down<<endl;
+
+    if (nx_down  > imageHeight){
+        nx_down  =imageHeight - xCoor + nx;
+        width_roi = nx_down;
+    }
+    if (ny_down > imageWidth){
+        ny_down = imageWidth - yCoor + ny;
+        height_roi = ny_down;
+    }
+    //cout << nx_down <<"    " << ny_down<<endl;
+//    cout << "Измененная длина и ширина рои "<< width_roi <<"    " << height_roi<<endl;
+
+    roiRect = QRect(xCoor-nx,yCoor-ny,width_roi,height_roi);
+
+    QPainter tempPainter(&currentPix);
+    tempPainter.setPen(QColor(255, 0, 0, 255));
+    tempPainter.drawRect(roiRect);
+    update();
 }
 
 void Widget::on_stopTracking_clicked()
@@ -245,4 +284,5 @@ void Widget::on_saveCryterySettingsButton_clicked()
     cryteryFunctionType = ui->crytheryType->currentText();
     cout << cryteryFunctionType.toStdString() << endl;
 }
+
 

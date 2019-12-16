@@ -40,7 +40,7 @@ public:
     void createNewQPixmapEtalon();
     vector<String> getImageFilenames();
     void loadImagesFromPath(vector<String> imgFilenames);
-
+    void updateRoi();
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -61,6 +61,7 @@ private:
     Ui::Widget *ui;
     QPainter painter;
     QRect currentRect;
+    QRect roiRect;
     QPixmap currentPix;
     QPixmap originalPix;
     QPixmap etalonPix;
@@ -71,12 +72,13 @@ private:
 
     QString cryteryFunctionType;
 
-    const int imageHeight = 320;
-    const int imageWidth = 240;
+    const int imageHeight = 640;
+    const int imageWidth = 480;
 
     Mat etalonMat;
     Mat originalMat;
-    Mat debugMat;
+    Mat roiMat;
+
     vector<Mat> videoSequence;
 
     bool saveEtalon;
