@@ -5,6 +5,8 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 #include <vector>
+#include <QRect>
+
 
 using namespace std;
 using namespace cv;
@@ -13,15 +15,15 @@ class Etalon_updater
 {
 public:
     Etalon_updater();
-    vector<int> search(Mat image, Mat debug);
-    vector<int> coordinates;
+    QRect search(Mat image, Mat debug);
+    vector<cv::Point> coordinates;
 private:
     int str;
     int max = 0;
     int x = 0;
     int y = 0;
-    float xCoor = 0;
-    float yCoor = 0;
+    int xCoor = 0;
+    int yCoor = 0;
     Mat thr;
 
     Mat canny_output;

@@ -4,12 +4,12 @@ Etalon_updater::Etalon_updater()
 {
 
 }
-vector<int> Etalon_updater::search(Mat image, Mat debug){
+QRect Etalon_updater::search(Mat etalonImage, Mat debugImmage){
 
-    int width = debug.rows;
-    int height = debug.cols;
+    int width = etalonImage.rows;
+    int height = etalonImage.cols;
 
-    threshold( debug, thr, 50,255,THRESH_BINARY );
+    threshold( debugImmage, thr, 50,255,THRESH_BINARY );
 
     // detect edges using canny
     Canny( thr, canny_output, 50, 150, 3 );
@@ -33,18 +33,6 @@ vector<int> Etalon_updater::search(Mat image, Mat debug){
     }
 
     cout <<"Координаты нужного пикселя х = "<< xCoor<<" "<<"y = "<<yCoor<<endl;
-    cv::Rect rect(xCoor, yCoor, width, height);
-    // and its top left corner...
-    cv::Point pt1(xCoor, yCoor);
-    // and its bottom right corner.
-    cv::Point pt2(xCoor + width, yCoor + height);
-    // These two calls...
-    cv::rectangle(image, pt1, pt2, cv::Scalar(0, 0, 255));
-    // essentially do the same thing
-    cv::rectangle(image, rect, cv::Scalar(0, 0, 255));
-
-    coordinates.push_back(xCoor);
-    coordinates.push_back(yCoor);
-
-    return coordinates;
+    QRect new_etalon(xCoor, yCoor, width, height);
+    return new_etalon;
 }

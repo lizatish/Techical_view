@@ -189,7 +189,7 @@ vector<String> Widget::getImageFilenames(){
 
     // Формирование последовательности картинок из пути папки
     vector<cv::String> filenames;
-    String pngImagePath = (dir + "/*.png").toStdString();
+    String pngImagePath = (dir + "/*.jpg").toStdString();
     glob(pngImagePath, filenames, false);
     return filenames;
 }
@@ -203,9 +203,18 @@ void Widget::on_startTracking_clicked()
         currentPix = Mat2QPixmap(image);
 
         // тут вставить код Ильи и Миши
-        debugMat = cryteryFunction.calculation_criterion(originalMat, etalonMat);
+        debugMat = cryteryFunction.calculation_criterion(image, etalonMat);
+//        imwrite("/home/liza/Desktop/1.png", debugMat);
+        QRect etalon_coordinates = etalonUpdayer.search(etalonMat, debugMat);
+        currentRect = etalon_coordinates;
+        // Обновление эталона
+        createNewMatEtalon();
+        createNewQPixmapEtalon();
 
-        vector<int> coordinates = etalonUpdayer.search(image, debugMat);
+//        currentPix = originalPix.copy();
+        QPainter tempPainter(&currentPix);
+        tempPainter.setPen(QColor(0, 247, 28, 255));
+        tempPainter.drawRect(currentRect);
 
         update();
         waitKey(100);
