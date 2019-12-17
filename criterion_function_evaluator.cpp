@@ -12,10 +12,6 @@ Criterion_function_evaluator::Criterion_function_evaluator()
 
 }
 Mat Criterion_function_evaluator::calculation_criterion(Mat src, Mat srccrop){
-
-    cout << "src: " << src.rows << " " << src.cols << endl;
-    cout << "srccrop: " << srccrop.rows << " " << srccrop.cols << endl;
-
     // Входим в функцию расчета значений пикселей
     return src_error(src, srccrop);
 }
@@ -109,7 +105,7 @@ Mat Criterion_function_evaluator::src_error(Mat src, Mat srccrop)
 
             // Вычисляем значения пикселей путем нормализации
             d = errorSum * coeff2 /(srccrop.rows*srccrop.cols*coeff);
-            cout << deltax << " " << deltay << " | " << errorSum << " " << d << endl;
+//            cout << deltax << " " << deltay << " | " << errorSum << " " << d << endl;
 
             // Записываем значения пикселей в матрицу изображения
             debug.at<uchar>(Point(deltay, deltax)) = d;

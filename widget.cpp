@@ -170,12 +170,14 @@ void Widget::on_fileDialogButton_clicked()
     currentMat = videoSequence[0];
     currentPix = Mat2QPixmap(currentMat);
     update();
+    waitKey(10);
+
 }
 
 void Widget::loadImagesFromPath(vector<String> imgFilenames){
     Mat image;
     videoSequence.clear();
-    for (size_t i=0; i < imgFilenames.size(); i++){
+    for (size_t i=1; i < imgFilenames.size(); i++){
         image = imread(imgFilenames[i], IMREAD_GRAYSCALE);
         cv::resize(image, image, Size(imageHeight, imageWidth));
         videoSequence.push_back(image);
@@ -202,6 +204,7 @@ void Widget::on_startTracking_clicked()
     Criterion_function_evaluator cryteryFunction;
     Etalon_updater etalonUpdayer;
     // тут соединения всех кодов
+    int i = 0;
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
         currentMat = image;
@@ -213,6 +216,17 @@ void Widget::on_startTracking_clicked()
         currentRect.setY(outputData.y() + roiRect.y());
         currentRect.setWidth(outputData.width());
         currentRect.setHeight(outputData.height());
+
+        if (i == 2){
+            imwrite("/home/liza/Desktop/11111.png", etalonMat);
+
+
+        }
+        if (i == 3){
+            imwrite("/home/liza/Desktop/22222.png", etalonMat);
+
+        }
+        i += 1;
 
         imwrite("/home/liza/Desktop/etalon.png", etalonMat);
         imwrite("/home/liza/Desktop/debug.png", debugMat);
@@ -232,7 +246,10 @@ void Widget::on_startTracking_clicked()
         updateRoi();
 
         update();
-        waitKey(100);
+        waitKey(10);
+        ui->lalala->setMaximumSize(QSize(roiRect.height(), roiRect.width()));
+        ui->lalala->setPixmap(Mat2QPixmap(roiMat));
+        update();
 
         if(isStop){
             isStop = false;

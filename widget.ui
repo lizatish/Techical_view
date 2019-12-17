@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1064</width>
-    <height>657</height>
+    <height>835</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -370,6 +370,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="lalala">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>630</y>
+     <width>341</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
