@@ -33,13 +33,13 @@ QPixmap Widget::Mat2QPixmap(cv::Mat const& src)
 
 void Widget::createNewMatEtalon()
 {
-    originalMat(cv::Rect(currentRect.x(),currentRect.y(),
+    currentMat(cv::Rect(currentRect.x(),currentRect.y(),
                          currentRect.width(),currentRect.height())).copyTo(etalonMat);
 }
 
 void Widget::createNewQPixmapEtalon()
 {
-    etalonPix = originalPix.copy(currentRect);
+    etalonPix = currentPix.copy(currentRect);
     ui->etalon->setScaledContents(true);
     ui->etalon->setMaximumSize(QSize(110, 110));
     ui->etalon->setPixmap(etalonPix);
@@ -59,7 +59,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 void Widget::mouseMoveEvent(QMouseEvent* event){
     if(event->type() == QEvent::MouseMove and isSetEtalonHandle
             and not isSetEtalonFromCoordinates){
-        currentPix = originalPix.copy();
+        currentPix = Mat2QPixmap(currentMat);
 
         QPoint rectCoorfinates;
         if ((event->x() >= imageHeight - 2) and (event->y() >= imageWidth - 2)){
@@ -148,11 +148,15 @@ void Widget::on_saveEtalon_clicked()
     createNewQPixmapEtalon();
     createNewMatEtalon();
 
-    currentPix = originalPix.copy();
-    painter.setPen(QColor(255, 247, 28, 255));
-    painter.drawRect(currentRect);
-    update();
+//    currentPix = originalPix.copy();
+    QPainter tempPainter(&currentPix);
+
+    tempPainter.setPen(QColor(255, 247, 28, 255));
+    tempPainter.drawRect(currentRect);
+    tempPainter.setPen(QColor(255, 0, 0, 255));
+    tempPainter.drawRect(roiRect);
     updateRoi();
+    update();
 }
 
 void Widget::on_fileDialogButton_clicked()
@@ -163,9 +167,8 @@ void Widget::on_fileDialogButton_clicked()
     loadImagesFromPath(imageFilenames);
 
     // доработать
-    originalMat = videoSequence[0];
-    originalPix = Mat2QPixmap(originalMat) ;
-    currentPix = originalPix.copy();
+    currentMat = videoSequence[0];
+    currentPix = Mat2QPixmap(currentMat);
     update();
 }
 
@@ -201,21 +204,32 @@ void Widget::on_startTracking_clicked()
     // тут соединения всех кодов
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
+        currentMat = image;
 
         // тут вставить код Ильи и Миши
-        Mat debugMat = cryteryFunction.calculation_criterion(image, etalonMat);
-        vector<QRect> outputData = etalonUpdayer.search(etalonMat, debugMat);
-        currentRect = outputData[0];
-        roiRect = outputData[1];
+        Mat debugMat = cryteryFunction.calculation_criterion(roiMat, etalonMat);
+        QRect outputData = etalonUpdayer.search(etalonMat, debugMat);
+        currentRect.setX(outputData.x() + roiRect.x());
+        currentRect.setY(outputData.y() + roiRect.y());
+        currentRect.setWidth(outputData.width());
+        currentRect.setHeight(outputData.height());
+
+        imwrite("/home/liza/Desktop/etalon.png", etalonMat);
+        imwrite("/home/liza/Desktop/debug.png", debugMat);
+        imwrite("/home/liza/Desktop/roi.png", roiMat);
+
+        QPainter tempPainter(&currentPix);
+        tempPainter.setPen(QColor(0, 247, 28, 255));
+        tempPainter.drawRect(currentRect);
+
+        tempPainter.setPen(QColor(255, 0, 0, 255));
+        tempPainter.drawRect(roiRect);
 
         // Обновление эталона
         createNewMatEtalon();
         createNewQPixmapEtalon();
 
-        //        currentPix = originalPix.copy();
-        QPainter tempPainter(&currentPix);
-        tempPainter.setPen(QColor(0, 247, 28, 255));
-        tempPainter.drawRect(currentRect);
+        updateRoi();
 
         update();
         waitKey(100);
@@ -233,9 +247,8 @@ void Widget::updateRoi(){
     int xCoor =currentRect.x();
     int yCoor =currentRect.y();
 
-
-    int nx = width/4; //число на которое увеличиваем ROI относительно эталона
-    int ny = height/4;
+    int nx = width/2; //число на которое увеличиваем ROI относительно эталона
+    int ny = height/2;
 
     int width_roi = width+2*nx;
     int height_roi = height+2*ny;
@@ -254,15 +267,10 @@ void Widget::updateRoi(){
         ny_down = imageWidth - yCoor + ny;
         height_roi = ny_down;
     }
-    //cout << nx_down <<"    " << ny_down<<endl;
-//    cout << "Измененная длина и ширина рои "<< width_roi <<"    " << height_roi<<endl;
 
     roiRect = QRect(xCoor-nx,yCoor-ny,width_roi,height_roi);
-
-    QPainter tempPainter(&currentPix);
-    tempPainter.setPen(QColor(255, 0, 0, 255));
-    tempPainter.drawRect(roiRect);
-    update();
+    currentMat(cv::Rect(roiRect.x(),roiRect.y(),
+                         roiRect.width(),roiRect.height())).copyTo(roiMat);
 }
 
 void Widget::on_stopTracking_clicked()

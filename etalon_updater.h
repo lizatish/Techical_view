@@ -15,7 +15,7 @@ class Etalon_updater
 {
 public:
     Etalon_updater();
-    vector<QRect> search(Mat image, Mat debug);
+    QRect search(Mat image, Mat debug);
     vector<cv::Point> coordinates;
 private:
     int str;

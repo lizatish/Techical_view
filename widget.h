@@ -63,7 +63,6 @@ private:
     QRect currentRect;
     QRect roiRect;
     QPixmap currentPix;
-    QPixmap originalPix;
     QPixmap etalonPix;
 
     double blurValue;
@@ -76,8 +75,8 @@ private:
     const int imageWidth = 480;
 
     Mat etalonMat;
-    Mat originalMat;
     Mat roiMat;
+    Mat currentMat;
 
     vector<Mat> videoSequence;
 
