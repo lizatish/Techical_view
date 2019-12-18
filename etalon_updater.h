@@ -24,9 +24,7 @@ private:
     int y = 0;
     int xCoor = 0;
     int yCoor = 0;
-    Mat thr;
 
-    Mat canny_output;
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
 

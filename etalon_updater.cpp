@@ -9,7 +9,11 @@ QRect Etalon_updater::search(Mat etalonImage, Mat debugImage){
     int width = etalonImage.rows;
     int height = etalonImage.cols;
 
+    Mat thr;
     threshold( debugImage, thr, 30,255,THRESH_BINARY );
+
+    Mat canny_output = thr.clone();
+
 
     blur( thr, thr, Size(3,3) );
     //    // detect edges using canny
@@ -33,7 +37,18 @@ QRect Etalon_updater::search(Mat etalonImage, Mat debugImage){
         yCoor = mc[i].y;
     }
 
-    cout <<"Координаты нужного пикселя х = "<< xCoor<<" "<<"y = "<<yCoor<<endl;
+    if (xCoor >= etalonImage.rows){
+        xCoor = etalonImage.rows;
+    }
+    else if (xCoor <= 0){
+        xCoor = 0;
+    }
+    if (yCoor >= etalonImage.cols){
+        yCoor = etalonImage.cols;
+    }
+    else if (xCoor <= 0){
+        yCoor = 0;
+    }
     QRect new_etalon(xCoor, yCoor, height, width);
     return  new_etalon;
 }

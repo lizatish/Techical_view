@@ -24,6 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+
 SOURCES += \
         widget.cpp \
         main.cpp \
@@ -45,6 +46,10 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+CONFIG += link_pkgconfig
+PKGCONFIG += opencv
+
+#LIBS += `pkg-config --cflags --libs opencv`
 TARGET = opencv
 CONFIG += console
 CONFIG -= app_bundle

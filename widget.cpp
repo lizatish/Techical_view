@@ -24,17 +24,21 @@ Widget::~Widget()
     delete ui;
 }
 
-QPixmap Widget::Mat2QPixmap(cv::Mat const& src)
+QPixmap Widget::Mat2QPixmap(const cv::Mat& src)
 {
-    cv::Mat temp = src.clone();
-    return QPixmap::fromImage(QImage((uchar*) temp.data, temp.cols,
-                                     temp.rows, temp.step, QImage::Format_Grayscale8));
+    return QPixmap::fromImage(QImage((unsigned char*) src.data, src.cols, src.rows, QImage::Format_Grayscale8));
+
+    //    cv::Mat temp = src.clone();
+    //    QPixmap p = QPixmap::fromImage(Mat2QImage(src));
+    //    p = p.scaledToWidth(src.cols);
+    //    return p;
+
 }
 
 void Widget::createNewMatEtalon()
 {
     currentMat(cv::Rect(currentRect.x(),currentRect.y(),
-                         currentRect.width(),currentRect.height())).copyTo(etalonMat);
+                        currentRect.width(),currentRect.height())).copyTo(etalonMat);
 }
 
 void Widget::createNewQPixmapEtalon()
@@ -91,6 +95,7 @@ void Widget::paintEvent(QPaintEvent *event){
         painter.drawPixmap(0, 0, currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
             painter.setPen(QColor(255, 247, 28, 255));
+            cout << 2 << endl;
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
@@ -110,13 +115,17 @@ void Widget::paintEvent(QPaintEvent *event){
             tempPainter.setPen(QColor(255, 247, 28, 255));
             tempPainter.drawRect(currentRect);
             // Меняем эталоны
-            createNewQPixmapEtalon();
-            createNewMatEtalon();
-            if (not isSetEtalonFromCoordinates){
-                ui->xEtalonValue->setValue(currentRect.x());
-                ui->yEtalonValue->setValue(currentRect.y());
-                ui->widthEtalonValue->setValue(currentRect.width());
-                ui->heightEtalonValue->setValue(currentRect.height());
+            if (isSetEtalonHandle or isSetEtalonHandle){
+                createNewQPixmapEtalon();
+                createNewMatEtalon();
+                cout << 1 << endl;
+
+                if (not isSetEtalonFromCoordinates){
+                    ui->xEtalonValue->setValue(currentRect.x());
+                    ui->yEtalonValue->setValue(currentRect.y());
+                    ui->widthEtalonValue->setValue(currentRect.width());
+                    ui->heightEtalonValue->setValue(currentRect.height());
+                }
             }
         }
         painter.drawPixmap(0, 0, currentPix);
@@ -131,7 +140,7 @@ void Widget::on_setEtalonHandle_clicked()
 }
 void Widget::on_setEtalonFromCoordinates_clicked()
 {
-    isSetEtalonFromCoordinates = true;
+    isSetEtalonHandle = true;
     ui->setEtalonFromCoordinates->setDown(true);
 }
 
@@ -148,15 +157,13 @@ void Widget::on_saveEtalon_clicked()
     createNewQPixmapEtalon();
     createNewMatEtalon();
 
-//    currentPix = originalPix.copy();
     QPainter tempPainter(&currentPix);
-
-    tempPainter.setPen(QColor(255, 247, 28, 255));
-    tempPainter.drawRect(currentRect);
     tempPainter.setPen(QColor(255, 0, 0, 255));
     tempPainter.drawRect(roiRect);
+    tempPainter.end();
+
     updateRoi();
-    update();
+    repaint();
 }
 
 void Widget::on_fileDialogButton_clicked()
@@ -201,62 +208,67 @@ vector<String> Widget::getImageFilenames(){
 
 void Widget::on_startTracking_clicked()
 {
-    Criterion_function_evaluator cryteryFunction;
-    Etalon_updater etalonUpdayer;
+    Criterion_function_evaluator* cryteryFunction = new Criterion_function_evaluator();
+    Etalon_updater* etalonUpdayer = new Etalon_updater();
+
     // тут соединения всех кодов
-    int i = 0;
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
         currentMat = image;
 
         // тут вставить код Ильи и Миши
-        Mat debugMat = cryteryFunction.calculation_criterion(roiMat, etalonMat);
-        QRect outputData = etalonUpdayer.search(etalonMat, debugMat);
+        Mat debugMat = cryteryFunction->calculation_criterion(roiMat, etalonMat);
+        QRect outputData = etalonUpdayer->search(etalonMat, debugMat);
         currentRect.setX(outputData.x() + roiRect.x());
         currentRect.setY(outputData.y() + roiRect.y());
         currentRect.setWidth(outputData.width());
         currentRect.setHeight(outputData.height());
-
-        if (i == 2){
-            imwrite("/home/liza/Desktop/11111.png", etalonMat);
-
-
-        }
-        if (i == 3){
-            imwrite("/home/liza/Desktop/22222.png", etalonMat);
-
-        }
-        i += 1;
 
         imwrite("/home/liza/Desktop/etalon.png", etalonMat);
         imwrite("/home/liza/Desktop/debug.png", debugMat);
         imwrite("/home/liza/Desktop/roi.png", roiMat);
 
         QPainter tempPainter(&currentPix);
-        tempPainter.setPen(QColor(0, 247, 28, 255));
-        tempPainter.drawRect(currentRect);
-
+        //                tempPainter.begin(this);
+        //        tempPainter.setPen(QColor(0, 247, 28, 255));
+        //        tempPainter.drawRect(currentRect);
         tempPainter.setPen(QColor(255, 0, 0, 255));
         tempPainter.drawRect(roiRect);
+        tempPainter.end();
 
         // Обновление эталона
+        Mat new_etalon = etalonMat.clone();
+        currentMat(cv::Rect(currentRect.x(),currentRect.y(),
+                            currentRect.width(),currentRect.height())).copyTo(new_etalon);
+
+        float betta = 0.3; //коэфиициент сглаживания
+        float updateN = 0;
+        for (int i = 0; i <= etalonMat.rows; i++){
+            for (int j = 0; j <= etalonMat.cols; j++){
+//                cout << (float)etalonMat.at<uchar>(i,j) << endl;
+                updateN = (betta * (float)etalonMat.at<uchar>(i,j))
+                        +((1-betta) * (float)new_etalon.at<uchar>(i,j));
+
+                if (updateN > 255)
+                    updateN = 255;
+                if (updateN < 0)
+                    updateN = 0;
+                etalonMat.at<float>(i,j) = updateN;
+            }
+        }
         createNewMatEtalon();
         createNewQPixmapEtalon();
-
         updateRoi();
-
-        update();
-        waitKey(10);
-        ui->lalala->setMaximumSize(QSize(roiRect.height(), roiRect.width()));
-        ui->lalala->setPixmap(Mat2QPixmap(roiMat));
-        update();
 
         if(isStop){
             isStop = false;
             break;
         }
+        update();
+        waitKey(10);
     }
 }
+
 void Widget::updateRoi(){
 
     int width = currentRect.width();
@@ -273,9 +285,6 @@ void Widget::updateRoi(){
     int nx_down = xCoor-nx + width_roi;
     int ny_down = yCoor-ny + height_roi; //координаты нижнего угла
 
-    cout <<"Ширина рои " <<width_roi <<" Длина рои " << height_roi<<endl;
-    cout <<"Координаты нижнего угла Х " <<nx_down <<" У " << ny_down<<endl;
-
     if (nx_down  > imageHeight){
         nx_down  =imageHeight - xCoor + nx;
         width_roi = nx_down;
@@ -287,7 +296,7 @@ void Widget::updateRoi(){
 
     roiRect = QRect(xCoor-nx,yCoor-ny,width_roi,height_roi);
     currentMat(cv::Rect(roiRect.x(),roiRect.y(),
-                         roiRect.width(),roiRect.height())).copyTo(roiMat);
+                        roiRect.width(),roiRect.height())).copyTo(roiMat);
 }
 
 void Widget::on_stopTracking_clicked()
