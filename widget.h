@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <Qt>
+#include <QThread>
+#include <QTimer>
 
 #include "criterion_function_evaluator.h"
 #include "etalon_updater.h"
@@ -89,6 +91,7 @@ private:
     bool drawStarted;
     bool isStop;
     bool isSetEtalonFromCoordinates = false;
+    bool isRanMainThread;
 };
 
 #endif // WIDGET_H

@@ -17,6 +17,12 @@ Widget::Widget(QWidget *parent) :
     isSetEtalonHandle = false;
     isStop = false;
     isSetEtalonFromCoordinates = false;
+
+    isRanMainThread = false;
+
+//    QTimer *timer = new QTimer(this);
+//        connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
+//        timer->start(1);
 }
 
 Widget::~Widget()
@@ -26,7 +32,8 @@ Widget::~Widget()
 
 QPixmap Widget::Mat2QPixmap(const cv::Mat& src)
 {
-    return QPixmap::fromImage(QImage((unsigned char*) src.data, src.cols, src.rows, QImage::Format_Grayscale8));
+    return QPixmap::fromImage(QImage((unsigned char*) src.data, src.cols, src.rows,
+                                     static_cast<int>(src.step),QImage::Format_Grayscale8));
 
     //    cv::Mat temp = src.clone();
     //    QPixmap p = QPixmap::fromImage(Mat2QImage(src));
@@ -43,24 +50,32 @@ void Widget::createNewMatEtalon()
 
 void Widget::createNewQPixmapEtalon()
 {
-    etalonPix = currentPix.copy(currentRect);
-    ui->etalon->setScaledContents(true);
-    ui->etalon->setMaximumSize(QSize(110, 110));
-    ui->etalon->setPixmap(etalonPix);
+//    etalonPix = Mat2QPixmap(etalonMat);/*currentPix.copy(currentRect);*/
+//    ui->etalon->setScaledContents(true);
+//    ui->etalon->setMaximumSize(QSize(110, 110));
+//    ui->etalon->setPixmap(etalonPix);
 }
 
 void Widget::mousePressEvent(QMouseEvent* event){
+    //    if (not isRanMainThread){
+
     mousePressed = true;
     currentRect.setTopLeft(event->pos());
     currentRect.setBottomRight(event->pos());
+    //    }
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *event){
+    //    if (not isRanMainThread){
+
     mousePressed = false;
     update();
+    //    }
 }
 
 void Widget::mouseMoveEvent(QMouseEvent* event){
+    //    if (not isRanMainThread){
+
     if(event->type() == QEvent::MouseMove and isSetEtalonHandle
             and not isSetEtalonFromCoordinates){
         currentPix = Mat2QPixmap(currentMat);
@@ -86,16 +101,16 @@ void Widget::mouseMoveEvent(QMouseEvent* event){
         currentRect.setBottomRight(rectCoorfinates);
         update();
     }
+    //    }
 }
 
 void Widget::paintEvent(QPaintEvent *event){
-
+    //    if (not isRanMainThread){
     painter.begin(this);
     if(mousePressed){
         painter.drawPixmap(0, 0, currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
             painter.setPen(QColor(255, 247, 28, 255));
-            cout << 2 << endl;
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
@@ -118,7 +133,6 @@ void Widget::paintEvent(QPaintEvent *event){
             if (isSetEtalonHandle or isSetEtalonHandle){
                 createNewQPixmapEtalon();
                 createNewMatEtalon();
-                cout << 1 << endl;
 
                 if (not isSetEtalonFromCoordinates){
                     ui->xEtalonValue->setValue(currentRect.x());
@@ -131,6 +145,7 @@ void Widget::paintEvent(QPaintEvent *event){
         painter.drawPixmap(0, 0, currentPix);
     }
     painter.end();
+    //    }
 }
 
 void Widget::on_setEtalonHandle_clicked()
@@ -208,16 +223,21 @@ vector<String> Widget::getImageFilenames(){
 
 void Widget::on_startTracking_clicked()
 {
+    isRanMainThread = true;
     Criterion_function_evaluator* cryteryFunction = new Criterion_function_evaluator();
     Etalon_updater* etalonUpdayer = new Etalon_updater();
 
+    int i = 0;
+    cout << "Слежение начато" << endl;
     // тут соединения всех кодов
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
         currentMat = image;
 
+        cout << "Поиск эталона в области интересов" << endl;
         // тут вставить код Ильи и Миши
         Mat debugMat = cryteryFunction->calculation_criterion(roiMat, etalonMat);
+        cout << "Поиск координат эталона" << endl;
         QRect outputData = etalonUpdayer->search(etalonMat, debugMat);
         currentRect.setX(outputData.x() + roiRect.x());
         currentRect.setY(outputData.y() + roiRect.y());
@@ -229,23 +249,20 @@ void Widget::on_startTracking_clicked()
         imwrite("/home/liza/Desktop/roi.png", roiMat);
 
         QPainter tempPainter(&currentPix);
-        //                tempPainter.begin(this);
-        //        tempPainter.setPen(QColor(0, 247, 28, 255));
-        //        tempPainter.drawRect(currentRect);
+//        tempPainter.setPen(QColor(0, 247, 28, 255));
+        tempPainter.drawRect(currentRect);
         tempPainter.setPen(QColor(255, 0, 0, 255));
         tempPainter.drawRect(roiRect);
         tempPainter.end();
 
-        // Обновление эталона
-        Mat new_etalon = etalonMat.clone();
-        currentMat(cv::Rect(currentRect.x(),currentRect.y(),
-                            currentRect.width(),currentRect.height())).copyTo(new_etalon);
+        cout << "Обновление эталона" << endl;
+        Mat new_etalon = currentMat(cv::Rect(currentRect.x(),currentRect.y(),
+                                             currentRect.width(),currentRect.height())).clone();
 
         float betta = 0.3; //коэфиициент сглаживания
         float updateN = 0;
         for (int i = 0; i <= etalonMat.rows; i++){
             for (int j = 0; j <= etalonMat.cols; j++){
-//                cout << (float)etalonMat.at<uchar>(i,j) << endl;
                 updateN = (betta * (float)etalonMat.at<uchar>(i,j))
                         +((1-betta) * (float)new_etalon.at<uchar>(i,j));
 
@@ -256,7 +273,7 @@ void Widget::on_startTracking_clicked()
                 etalonMat.at<float>(i,j) = updateN;
             }
         }
-        createNewMatEtalon();
+//        createNewMatEtalon();
         createNewQPixmapEtalon();
         updateRoi();
 
@@ -264,8 +281,14 @@ void Widget::on_startTracking_clicked()
             isStop = false;
             break;
         }
+        //        repaint();
         update();
-        waitKey(10);
+//        QPaintEvent* q =new QPaintEvent(this);;
+//        paintEvent();
+//        waitKey(10);
+        cout << "Обновление кадра" << endl;
+        if (videoSequence.size()){}
+        cout << "Кадр " << i << endl;
     }
 }
 
@@ -316,7 +339,6 @@ void Widget::on_saveNoiseSettingsButton_clicked()
 void Widget::on_saveCryterySettingsButton_clicked()
 {
     cryteryFunctionType = ui->crytheryType->currentText();
-    cout << cryteryFunctionType.toStdString() << endl;
 }
 
 
