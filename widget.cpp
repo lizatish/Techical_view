@@ -19,10 +19,6 @@ Widget::Widget(QWidget *parent) :
     isSetEtalonFromCoordinates = false;
 
     isRanMainThread = false;
-
-//    QTimer *timer = new QTimer(this);
-//        connect(timer, SIGNAL(timeout()), this, SLOT(repaint()));
-//        timer->start(1);
 }
 
 Widget::~Widget()
@@ -111,6 +107,7 @@ void Widget::paintEvent(QPaintEvent *event){
         painter.drawPixmap(0, 0, currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
             painter.setPen(QColor(255, 247, 28, 255));
+            cout << 2 << endl;
             painter.drawRect(currentRect);
             createNewQPixmapEtalon();
             createNewMatEtalon();
@@ -133,6 +130,7 @@ void Widget::paintEvent(QPaintEvent *event){
             if (isSetEtalonHandle or isSetEtalonHandle){
                 createNewQPixmapEtalon();
                 createNewMatEtalon();
+                cout << 1 << endl;
 
                 if (not isSetEtalonFromCoordinates){
                     ui->xEtalonValue->setValue(currentRect.x());
@@ -227,17 +225,13 @@ void Widget::on_startTracking_clicked()
     Criterion_function_evaluator* cryteryFunction = new Criterion_function_evaluator();
     Etalon_updater* etalonUpdayer = new Etalon_updater();
 
-    int i = 0;
-    cout << "Слежение начато" << endl;
     // тут соединения всех кодов
     for(Mat image: videoSequence){
         currentPix = Mat2QPixmap(image);
         currentMat = image;
 
-        cout << "Поиск эталона в области интересов" << endl;
         // тут вставить код Ильи и Миши
         Mat debugMat = cryteryFunction->calculation_criterion(roiMat, etalonMat);
-        cout << "Поиск координат эталона" << endl;
         QRect outputData = etalonUpdayer->search(etalonMat, debugMat);
         currentRect.setX(outputData.x() + roiRect.x());
         currentRect.setY(outputData.y() + roiRect.y());
@@ -249,20 +243,21 @@ void Widget::on_startTracking_clicked()
         imwrite("/home/liza/Desktop/roi.png", roiMat);
 
         QPainter tempPainter(&currentPix);
-//        tempPainter.setPen(QColor(0, 247, 28, 255));
+        tempPainter.setPen(QColor(0, 247, 28, 255));
         tempPainter.drawRect(currentRect);
         tempPainter.setPen(QColor(255, 0, 0, 255));
         tempPainter.drawRect(roiRect);
         tempPainter.end();
 
-        cout << "Обновление эталона" << endl;
+        // Обновление эталона
         Mat new_etalon = currentMat(cv::Rect(currentRect.x(),currentRect.y(),
                                              currentRect.width(),currentRect.height())).clone();
 
-        float betta = 0.3; //коэфиициент сглаживания
+                float betta = 0.3; //коэфиициент сглаживания
         float updateN = 0;
         for (int i = 0; i <= etalonMat.rows; i++){
             for (int j = 0; j <= etalonMat.cols; j++){
+                //                cout << (float)etalonMat.at<uchar>(i,j) << endl;
                 updateN = (betta * (float)etalonMat.at<uchar>(i,j))
                         +((1-betta) * (float)new_etalon.at<uchar>(i,j));
 
@@ -273,7 +268,7 @@ void Widget::on_startTracking_clicked()
                 etalonMat.at<float>(i,j) = updateN;
             }
         }
-//        createNewMatEtalon();
+        createNewMatEtalon();
         createNewQPixmapEtalon();
         updateRoi();
 
@@ -283,12 +278,8 @@ void Widget::on_startTracking_clicked()
         }
         //        repaint();
         update();
-//        QPaintEvent* q =new QPaintEvent(this);;
-//        paintEvent();
 //        waitKey(10);
-        cout << "Обновление кадра" << endl;
-        if (videoSequence.size()){}
-        cout << "Кадр " << i << endl;
+
     }
 }
 
@@ -339,6 +330,7 @@ void Widget::on_saveNoiseSettingsButton_clicked()
 void Widget::on_saveCryterySettingsButton_clicked()
 {
     cryteryFunctionType = ui->crytheryType->currentText();
+    cout << cryteryFunctionType.toStdString() << endl;
 }
 
 

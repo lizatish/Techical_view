@@ -8,8 +8,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <Qt>
-#include <QThread>
-#include <QTimer>
 
 #include "criterion_function_evaluator.h"
 #include "etalon_updater.h"
