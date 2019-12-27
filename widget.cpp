@@ -85,7 +85,6 @@ void Widget::mouseMoveEvent(QMouseEvent* event){
         currentRect.setBottomRight(rectCoorfinates);
         update();
     }
-    //    }
 }
 
 void Widget::paintEvent(QPaintEvent *event){
@@ -95,55 +94,43 @@ void Widget::paintEvent(QPaintEvent *event){
         if(currentRect.width() > 3 and currentRect.height() > 3){
             painter.setPen(QColor(255, 247, 28, 255));
             painter.drawRect(currentRect);
-            //            createNewQPixmapEtalon();
-            //            createNewMatEtalon();
-            if (not isSetEtalonFromCoordinates){
-                ui->xEtalonValue->setValue(currentRect.x());
-                ui->yEtalonValue->setValue(currentRect.y());
-                ui->widthEtalonValue->setValue(currentRect.width());
-                ui->heightEtalonValue->setValue(currentRect.height());
-            }
         }
         drawStarted = true;
     }
     else if (drawStarted){
         QPainter tempPainter(&currentPix);
         if(currentRect.width() > 3 and currentRect.height() > 3){
-            //            tempPainter.setBrush(QColor(244,1,1, 127));
             tempPainter.setPen(QColor(255, 247, 28, 255));
             tempPainter.drawRect(currentRect);
             if (isExistRoi){
                 tempPainter.setPen(QColor(255, 0, 0, 255));
                 tempPainter.drawRect(roiRect);
             }
-            cout << "Rect paint event " << currentRect.x() << " " << currentRect.y() << endl;
-            // Меняем эталоны
-            if (isSetEtalonHandle or isSetEtalonHandle){
-                //                createNewQPixmapEtalon();
-                //                createNewMatEtalon();
-
-                if (not isSetEtalonFromCoordinates){
-                    ui->xEtalonValue->setValue(currentRect.x());
-                    ui->yEtalonValue->setValue(currentRect.y());
-                    ui->widthEtalonValue->setValue(currentRect.width());
-                    ui->heightEtalonValue->setValue(currentRect.height());
-                }
-            }
+            createNewQPixmapEtalon();
+            createNewMatEtalon();
         }
         painter.drawPixmap(0, 0, currentPix);
     }
+
+    if (not isSetEtalonFromCoordinates){
+        ui->xEtalonValue->setValue(currentRect.x());
+        ui->yEtalonValue->setValue(currentRect.y());
+        ui->widthEtalonValue->setValue(currentRect.width());
+        ui->heightEtalonValue->setValue(currentRect.height());
+    }
     painter.end();
-    //    }
 }
 
 void Widget::on_setEtalonHandle_clicked()
 {
     isSetEtalonHandle = true;
+    isExistRoi = false;
     ui->setEtalonHandle->setDown(true);
 }
 void Widget::on_setEtalonFromCoordinates_clicked()
 {
-    isSetEtalonHandle = true;
+    isSetEtalonFromCoordinates = true;
+    isExistRoi = false;
     ui->setEtalonFromCoordinates->setDown(true);
 }
 
@@ -152,21 +139,13 @@ void Widget::on_saveEtalon_clicked()
     saveEtalon = true;
     isSetEtalonHandle = false;
     isSetEtalonFromCoordinates = false;
+    isExistRoi = true;
 
     currentRect.setX(ui->xEtalonValue->value());
     currentRect.setY(ui->yEtalonValue->value());
     currentRect.setWidth(ui->widthEtalonValue->value());
     currentRect.setHeight(ui->heightEtalonValue->value());
-    createNewMatEtalon();
-    createNewQPixmapEtalon();
-
-    QPainter tempPainter(&currentPix);
-    tempPainter.setPen(QColor(255, 0, 0, 255));
-    tempPainter.drawRect(roiRect);
-    tempPainter.end();
-
     updateRoi();
-    isExistRoi = true;
     update();
 }
 
@@ -181,8 +160,6 @@ void Widget::on_fileDialogButton_clicked()
     currentMat = videoSequence[0];
     currentPix = Mat2QPixmap(currentMat);
     update();
-    waitKey(10);
-
 }
 
 void Widget::loadImagesFromPath(vector<String> imgFilenames){
@@ -231,8 +208,6 @@ void Widget::on_startTracking_clicked()
         Mat debugMat = cryteryFunction->calculateCriterionFunction(roiMat, etalonMat, CRYTERION_FUNCTION_METHOD);
 
         currentRect = cryteryFunction->getEtalonCoordinates(debugMat, CRYTERION_FUNCTION_METHOD, roiRect, etalonMat);
-        createNewMatEtalon();
-        createNewQPixmapEtalon();
         update();
         waitKey(10);
     }
@@ -240,32 +215,30 @@ void Widget::on_startTracking_clicked()
 
 void Widget::updateRoi(){
 
-    int width = currentRect.width();
-    int height = currentRect.height();
-    int xCoor =currentRect.x();
-    int yCoor =currentRect.y();
+    int deltaX = currentRect.width() / 2; //число на которое увеличиваем ROI относительно эталона
+    int deltaY = currentRect.height() / 2;
 
-    int nx = width/2; //число на которое увеличиваем ROI относительно эталона
-    int ny = height/2;
+    int x1Roi = currentRect.x() - deltaX;
+    int y1Roi = currentRect.y() - deltaY;
+    int x2Roi = currentRect.x() + currentRect.width() + deltaX;
+    int y2Roi = currentRect.y() + currentRect.height() + deltaY;
 
-    int width_roi = width+2*nx;
-    int height_roi = height+2*ny;
-
-    int nx_down = xCoor-nx + width_roi;
-    int ny_down = yCoor-ny + height_roi; //координаты нижнего угла
-
-    if (nx_down  > imageHeight){
-        nx_down  =imageHeight - xCoor + nx;
-        width_roi = nx_down;
+    if (x1Roi < 0){
+        x1Roi = 0;
     }
-    if (ny_down > imageWidth){
-        ny_down = imageWidth - yCoor + ny;
-        height_roi = ny_down;
+    if (y1Roi < 0){
+        y1Roi = 0;
+    }
+    if (x2Roi > imageHeight){
+        x2Roi = imageHeight;
+    }
+    if (y2Roi > imageWidth){
+        y2Roi = imageWidth;
     }
 
-    roiRect = QRect(xCoor-nx,yCoor-ny,width_roi,height_roi);
-    roiMat = currentMat(cv::Rect(roiRect.x(),roiRect.y(),
-                                 roiRect.width(),roiRect.height())).clone();
+    roiRect = QRect(x1Roi, y1Roi, x2Roi - x1Roi, y2Roi - y1Roi);
+    roiMat =  currentMat(cv::Rect(roiRect.x(),roiRect.y(),
+                                  roiRect.width(),roiRect.height())).clone();
 }
 
 void Widget::on_stopTracking_clicked()
