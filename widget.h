@@ -8,13 +8,20 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <Qt>
-
-#include "criterion_function_evaluator.h"
-#include "etalon_updater.h"
+#include <QThread>
+#include <QTimer>
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 #include <vector>
 #include <string.h>
 using namespace std;
+
+#include "criterion_function_evaluator.h"
+#include "image_processing.h"
+
+
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -90,6 +97,7 @@ private:
     bool isStop;
     bool isSetEtalonFromCoordinates = false;
     bool isRanMainThread;
+    bool isExistRoi = false;
 };
 
 #endif // WIDGET_H

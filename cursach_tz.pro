@@ -24,19 +24,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-
 SOURCES += \
         widget.cpp \
-        main.cpp \
         image_widget.cpp \
+        main.cpp \
     criterion_function_evaluator.cpp \
-    etalon_updater.cpp
+    image_processing.cpp
 
 HEADERS += \
     widget.h \
     image_widget.h \
     criterion_function_evaluator.h \
-    etalon_updater.h
+    image_processing.h
+
 
 FORMS += \
         widget.ui
