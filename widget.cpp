@@ -54,7 +54,6 @@ void Widget::mousePressEvent(QMouseEvent* event){
 
 void Widget::mouseReleaseEvent(QMouseEvent *event){
     mousePressed = false;
-    update();
 }
 
 void Widget::mouseMoveEvent(QMouseEvent* event){
@@ -190,21 +189,18 @@ void Widget::on_startTracking_clicked()
     Criterion_function_evaluator* cryteryFunction = new Criterion_function_evaluator();
     image_processing* I = new image_processing();
 
-    int noiseType = 0, blurType = 0;
-    float noiseValue = 0, blurValue = 0;
-
-    //Выбираемметод,которымбудемсопоставлять
+     //Выбираемметод,которымбудемсопоставлять
     //0:SQDIFF 1:SQDIFFNORMED 2:TMCCORR 3:TMCCORRNORMED 4:TMCOEFF 5:TMCOEFFNORMED
     const int CRYTERION_FUNCTION_METHOD = 4;
 
     for(Mat image: videoSequence){
-        currentMat = I->addNoiseAndBlur(image.clone(), noiseType, blurType, noiseValue, blurValue);
+        currentMat = I->addNoiseAndBlur(image.clone(), noiseType, noiseValue, blurValue);
         currentPix = Mat2QPixmap(currentMat);
         updateRoi();
 
         Mat debugMat = cryteryFunction->calculateCriterionFunction(roiMat, etalonMat, CRYTERION_FUNCTION_METHOD);
-
         currentRect = cryteryFunction->getEtalonCoordinates(debugMat, CRYTERION_FUNCTION_METHOD, roiRect, etalonMat);
+
         update();
         waitKey(10);
     }
@@ -243,16 +239,15 @@ void Widget::on_stopTracking_clicked()
     isStop = true;
 }
 
-void Widget::on_saveNoiseSettingsButton_clicked()
-{
-    blurValue = ui->blurValue->value();
-    noiseValue = ui->noiseValue->value();
-    noiseType = ui->noiseType->currentText();
-}
 
 void Widget::on_saveCryterySettingsButton_clicked()
 {
     cryteryFunctionType = ui->crytheryType->currentText();
 }
 
-
+void Widget::on_saveButton_clicked()
+{
+    blurValue = ui->blurValue->value();
+    noiseValue = ui->noiseValue->value();
+    noiseType = ui->noiseType->currentText();
+}

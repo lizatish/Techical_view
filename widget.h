@@ -58,9 +58,9 @@ private slots:
     void on_fileDialogButton_clicked();
     void on_startTracking_clicked();
     void on_stopTracking_clicked();
-    void on_saveNoiseSettingsButton_clicked();
     void on_saveCryterySettingsButton_clicked();
     void on_setEtalonFromCoordinates_clicked();
+    void on_saveButton_clicked();
 
 private:
     Ui::Widget *ui;
@@ -73,7 +73,6 @@ private:
     double blurValue;
     double noiseValue;
     QString noiseType;
-
     QString cryteryFunctionType;
 
     const int imageHeight = 640;

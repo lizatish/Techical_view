@@ -5,37 +5,24 @@ image_processing::image_processing()
 
 }
 
-Mat image_processing::addNoiseAndBlur(Mat src, int choice_noise, int choice_blur,
-                                       float n, float degree_blur){
-
-   // cout << "Изображение размер"<< src.rows << " "<< src.cols<< endl;
-    if (choice_noise != 0 || choice_blur != 0){
-
-        switch(choice_noise){
-        case 1:
-            image_noise = Gaussian_noise(src, n);
-            break;
-        case 2:
-            image_noise = Saltpepper_noise(src, n);
-            break;
-        case 3:
-            n = n/2 + 1;
-            image_noise = uniform_noise(src, n);
-            break;
-        }
-        if(choice_blur != 0){
-            image_noise = Gaussian_blur(image_noise, degree_blur);
-        }
-
-
-        //        namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
-        //        imshow( "Display window", image_noise);     // Show our image inside it.
+Mat image_processing::addNoiseAndBlur(Mat src, QString noiseType, float noiseValue, float blurValue){
+    if (noiseType == "Гауссовский"){
+        image_noise = Gaussian_noise(src, noiseValue * 100);
+    }
+    else if (noiseType == "Импульсный"){
+        image_noise = Saltpepper_noise(src, noiseValue * 15);
+    }
+    else if (noiseType == "Равномерный"){
+        noiseValue = noiseValue/2 + 1;
+        image_noise = uniform_noise(src, noiseValue);
+    }
+    else{
+        image_noise = src.clone();
     }
 
-    if (choice_noise == 0 && choice_blur==0){
-        image_noise = src;
+    if(blurValue != 0){
+        image_noise = Gaussian_blur(image_noise, blurValue);
     }
-    // cvtColor(image_noise,image_noise, CV_BGR2GRAY);
     return image_noise;
 }
 
