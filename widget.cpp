@@ -17,8 +17,8 @@ Widget::Widget(QWidget *parent) :
     isSetEtalonHandle = false;
     isStop = false;
     isSetEtalonFromCoordinates = false;
-
-    isRanMainThread = false;
+    isSetEtalonFromCoordinates = false;
+    isExistRoi = false;
 }
 
 Widget::~Widget()
@@ -28,10 +28,8 @@ Widget::~Widget()
 
 QPixmap Widget::Mat2QPixmap(const cv::Mat& src)
 {
-    QImage image((unsigned char*) src.data, src.cols, src.rows,
-                 static_cast<int>(src.step),QImage::Format_Grayscale8);
-    QPixmap pix = QPixmap::fromImage(image);
-    return pix;
+    return QPixmap::fromImage(QImage((unsigned char*) src.data, src.cols, src.rows,
+                                     static_cast<int>(src.step),QImage::Format_Grayscale8));
 }
 
 void Widget::createNewMatEtalon()
@@ -42,7 +40,7 @@ void Widget::createNewMatEtalon()
 
 void Widget::createNewQPixmapEtalon()
 {
-    etalonPix = Mat2QPixmap(etalonMat);/*currentPix.copy(currentRect);*/
+    etalonPix = Mat2QPixmap(etalonMat);
     ui->etalon->setScaledContents(true);
     ui->etalon->setMaximumSize(QSize(110, 110));
     ui->etalon->setPixmap(etalonPix);
@@ -189,7 +187,6 @@ vector<String> Widget::getImageFilenames(){
 
 void Widget::on_startTracking_clicked()
 {
-    isRanMainThread = true;
     Criterion_function_evaluator* cryteryFunction = new Criterion_function_evaluator();
     image_processing* I = new image_processing();
 

@@ -21,8 +21,6 @@ using namespace std;
 #include "criterion_function_evaluator.h"
 #include "image_processing.h"
 
-
-
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/opencv.hpp>
@@ -40,7 +38,6 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    int AAA = 1;
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
     QPixmap Mat2QPixmap(Mat const& src);
@@ -49,8 +46,6 @@ public:
     vector<String> getImageFilenames();
     void loadImagesFromPath(vector<String> imgFilenames);
     void updateRoi();
-    void updateEtalon(Mat previous_etalon, Mat current_etalon, Mat newEtalon);
-QImage Mat2QImage(const cv::Mat_<double> &src);
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -95,9 +90,8 @@ private:
     bool mousePressed;
     bool drawStarted;
     bool isStop;
-    bool isSetEtalonFromCoordinates = false;
-    bool isRanMainThread;
-    bool isExistRoi = false;
+    bool isSetEtalonFromCoordinates;
+    bool isExistRoi;
 };
 
 #endif // WIDGET_H
